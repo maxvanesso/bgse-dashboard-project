@@ -50,6 +50,8 @@ names <-as.vector(totalrevenue$CategoryName)
 library(ggmap)
 library(ggplot2)
 library(maps)
+library(fields)
+library(psych)
 # Plot and save graph
 png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
 plot(g,
