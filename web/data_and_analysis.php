@@ -39,7 +39,7 @@
 	
 	<p> We start from considering associations between product categories as observed in past transactions. Specifically, the chart below shown the links between pairs of categories according to the number of times they are bought together. The thicker the network edge connecting two categories, the more often those two categories are found together in the customers' baskets. The size of the circles is proportional to the total revenues that each product categories generates.</p>
 	
-	<center><img src="Rplotreddots.png" style="width: 40%"></center>
+	<center><img src="Rplotreddots.png" style="width: 10%"></center>
 
 	<p>The information provided in the network graph above could be used to informed marketing campaigns that cover two or more product categories, so that the marketing team could deploy offers for products that belong to categories that "go together".
 	
