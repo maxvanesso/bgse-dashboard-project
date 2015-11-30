@@ -39,7 +39,8 @@ result = dbSendQuery(db, "SELECT C1.CategoryName, SUM(O1.UnitPrice*O1.Quantity) 
 totalrevenue = fetch(result, n=-1)
 
 # Load (DIRECTED) graph from data frame 
-g <- ggmap(get_map(location = "united states", zoom = 3, source = 'google')) +
+map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
+g <- ggmap(map) +
   geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
 
 # Define size of nodes
