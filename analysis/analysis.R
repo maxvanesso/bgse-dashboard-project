@@ -48,7 +48,6 @@ names <-as.vector(totalrevenue$CategoryName)
 library(ggmap)
 library(ggplot2)
 library(maps)
-library(psych)
 
 # map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
 # g <- ggmap(map) +
