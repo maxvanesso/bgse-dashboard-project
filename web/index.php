@@ -60,9 +60,9 @@ function show_content(optionsId) {
 
 		<div id="home">
 			<h2>Home</h2>
-			<h4>The challenge</h4>
+			<h3>The challenge</h3>
 			
-			<p>Introduction on the challenge this is something.</p>
+			<p>Introduction on the challenge this is something. And trying something else.</p>
 			
 			<ul style="list-style-type:circle">
   				<li> The first objective can be explained here. </li>
