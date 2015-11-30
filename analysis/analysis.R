@@ -46,6 +46,8 @@ g <- ggmap(get_map(location = "united states", zoom = 3, source = 'google')) +
 node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
 names <-as.vector(totalrevenue$CategoryName)
 
+library(ggmap)
+
 # Plot and save graph
 png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
 plot(g,
