@@ -46,16 +46,8 @@ node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
 names <-as.vector(totalrevenue$CategoryName)
 
 # Plot and save graph
-png("web/categories_network.png")
-plot(g, vertex.label = names,
-     vertex.shape="circle",
-     vertex.color="orange",
-     vertex.label.dist=1.2,
-     vertex.size=node.size/10000,
-     edge.width=E(g)$weight/20,
-     vertex.label.cex=1.1,
-     vertex.label.family="Helvetica"
-)
+png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
+
 dev.off()
 
 #### IMPLEMENTATION OF APRIORI ALGORITHM ####
