@@ -40,9 +40,6 @@ totalrevenue = fetch(result, n=-1)
 
 # Load (DIRECTED) graph from data frame 
 
-# map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
-# g <- ggmap(map) +
-#   geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
 
 # Define size of nodes
 node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
@@ -51,8 +48,12 @@ names <-as.vector(totalrevenue$CategoryName)
 library(ggmap)
 library(ggplot2)
 library(maps)
-library(fields)
 library(psych)
+
+# map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
+# g <- ggmap(map) +
+#   geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
+
 
 # Plot and save graph
 png("/home/max/Dropbox/Project group/Computing Project/Rplot.png")
