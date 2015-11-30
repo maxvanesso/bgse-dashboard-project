@@ -62,7 +62,7 @@ function show_content(optionsId) {
 			<h2>Home</h2>
 			<h4>The challenge</h4>
 			
-			<p>Introduction on the challenge.</p>
+			<p>Introduction on the challenge this is something.</p>
 			
 			<ul style="list-style-type:circle">
   				<li> The first objective can be explained here. </li>
