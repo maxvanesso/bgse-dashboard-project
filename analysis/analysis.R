@@ -39,9 +39,10 @@ result = dbSendQuery(db, "SELECT C1.CategoryName, SUM(O1.UnitPrice*O1.Quantity) 
 totalrevenue = fetch(result, n=-1)
 
 # Load (DIRECTED) graph from data frame 
-map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
-g <- ggmap(map) +
-  geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
+
+# map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
+# g <- ggmap(map) +
+#   geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
 
 # Define size of nodes
 node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
@@ -54,9 +55,13 @@ library(fields)
 library(psych)
 
 # Plot and save graph
-
 png("/home/max/Dropbox/Project group/Computing Project/Rplot.png")
-
+# plot(g,
+#      edge.width=E(g)$weight/20,
+#      vertex.label.cex=1.1,
+#      vertex.label.family="Helvetica"
+# )
+# dev.off()
 
 #### IMPLEMENTATION OF APRIORI ALGORITHM ####
 
