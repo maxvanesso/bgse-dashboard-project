@@ -48,7 +48,7 @@ function show_content(optionsId) {
 }
 </script>
 <body>
-	<div id="header"><h1>Group7- Cigars Data (Felix Gutmann, Marco Fayet, Max van Esso)</h1></div>
+	<div id="header"><h1>Group7- JR Cigars Data (Felix Gutmann, Marco Fayet, Max van Esso)</h1></div>
 
 	<div id="menu">
 		<a id="home_link" href="#" class="active" onclick="show_content('home'); return false;">Home</a> &middot;
