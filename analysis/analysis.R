@@ -49,19 +49,20 @@ library(ggmap)
 library(ggplot2)
 library(maps)
 
-# map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
-# g <- ggmap(map) +
-#   geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
+map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
+g <- ggmap(map) +
+geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
 
 
 # Plot and save graph
 png("/home/max/Dropbox/Project group/Computing Project/Rplot.png")
+plot(g)
 # plot(g,
 #      edge.width=E(g)$weight/20,
 #      vertex.label.cex=1.1,
 #      vertex.label.family="Helvetica"
 # )
-# dev.off()
+dev.off()
 
 #### IMPLEMENTATION OF APRIORI ALGORITHM ####
 
