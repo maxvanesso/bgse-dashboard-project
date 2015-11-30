@@ -47,7 +47,8 @@ node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
 names <-as.vector(totalrevenue$CategoryName)
 
 library(ggmap)
-
+library(ggplot2)
+library(maps)
 # Plot and save graph
 png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
 plot(g,
