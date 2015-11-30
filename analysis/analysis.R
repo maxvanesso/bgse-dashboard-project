@@ -52,14 +52,11 @@ library(ggplot2)
 library(maps)
 library(fields)
 library(psych)
+
 # Plot and save graph
-png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
-plot(g,
-     edge.width=E(g)$weight/20,
-     vertex.label.cex=1.1,
-     vertex.label.family="Helvetica"
-)
-dev.off()
+
+png("/home/max/Dropbox/Project group/Computing Project/Rplot.png")
+
 
 #### IMPLEMENTATION OF APRIORI ALGORITHM ####
 
