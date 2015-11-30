@@ -39,7 +39,8 @@ result = dbSendQuery(db, "SELECT C1.CategoryName, SUM(O1.UnitPrice*O1.Quantity) 
 totalrevenue = fetch(result, n=-1)
 
 # Load (DIRECTED) graph from data frame 
-g <- graph.data.frame(relations, directed=FALSE)
+g <- ggmap(get_map(location = "united states", zoom = 3, source = 'google')) +
+  geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
 
 # Define size of nodes
 node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
@@ -47,7 +48,11 @@ names <-as.vector(totalrevenue$CategoryName)
 
 # Plot and save graph
 png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
-
+plot(g,
+     edge.width=E(g)$weight/20,
+     vertex.label.cex=1.1,
+     vertex.label.family="Helvetica"
+)
 dev.off()
 
 #### IMPLEMENTATION OF APRIORI ALGORITHM ####
