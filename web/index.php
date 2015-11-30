@@ -67,6 +67,7 @@ function show_content(optionsId) {
 			<ul style="list-style-type:circle">
   				<li> The first objective can be explained here. </li>
   				<li> Here we explain some interesting stuff.</li>
+  				<li> Test for adding a new bullet point.</li>
 			</ul>
 			
 			<h3>The solution</h3>

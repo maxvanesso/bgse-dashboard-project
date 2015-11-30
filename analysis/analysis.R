@@ -46,7 +46,7 @@ node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
 names <-as.vector(totalrevenue$CategoryName)
 
 # Plot and save graph
-png("/home/max/Dropbox/Project group/Computing Project/Rplotreddots.png")
+png("web/categories_network.png")
 plot(g, vertex.label = names,
      vertex.shape="circle",
      vertex.color="orange",
