@@ -55,8 +55,8 @@ geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, col
 
 
 # Plot and save graph
-#png("/home/max/Dropbox/Project group/Computing Project/Rplot.png")
-plot(g)
+png("web/Rplot.png")
+plot(c(1,2,3))
 # plot(g,
 #      edge.width=E(g)$weight/20,
 #      vertex.label.cex=1.1,
