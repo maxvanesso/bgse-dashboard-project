@@ -45,13 +45,13 @@ totalrevenue = fetch(result, n=-1)
 node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
 names <-as.vector(totalrevenue$CategoryName)
 
-library(ggmap)
-library(ggplot2)
-library(maps)
-
-map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
-g <- ggmap(map) +
-geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
+# library(ggmap)
+# library(ggplot2)
+# library(maps)
+# 
+# map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
+# g <- ggmap(map) +
+# geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
 
 
 # Plot and save graph
