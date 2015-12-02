@@ -39,4 +39,4 @@ The `R` analysis relies on the following packages.
 
 ## Acknowledgments
 
-This project is based on code by: Guglielmo Bartolozzi, Gaston Besanson, Christian Brownlees, Stefano Costantini, Laura Cozma, Jordi Zamora Munt
+This project is based on code by: Guglielmo Bartolozzi, Gaston Besanson, Christian Brownlees, Stefano Costantini, Laura Cozma, Jordi Hello WOrdlasdalk
