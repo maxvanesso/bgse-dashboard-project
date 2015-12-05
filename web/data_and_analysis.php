@@ -21,7 +21,7 @@
     // Total Revenue by product
     
     $query = "SELECT TRUNCATE(SUM(i.Sales),2), I.InvoiceDate FROM cigar.invoice_detail i INNER JOIN cigar.invoice I 
-    ON i.InvoiceNumber = I.InvoiceNumber GROUP BY day(I.InvoiceDate)";
+    ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
     $title = "Sales by day";
     query_and_print_graph($query,$title,"Dolars");
 ?>
@@ -83,7 +83,7 @@ group by Brand order by Total asc limit 5";
 	
 	$query = "SELECT I.InvoiceDate, sum(i.Sales) as Total
 from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber  
-group by InvoiceDate";
+group by I.InvoiceDate";
 	$title = "Least profitables";
 	query_and_print_series($query,$title,"Dollars");
 ?>
