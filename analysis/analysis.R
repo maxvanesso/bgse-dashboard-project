@@ -56,7 +56,7 @@ names <-as.vector(totalrevenue$CategoryName)
 
 # Plot and save graph
 png("web/Rplot.png")
-plot(c(1,2,3))
+#plot(c(1,2,3))
 # plot(g,
 #      edge.width=E(g)$weight/20,
 #      vertex.label.cex=1.1,
