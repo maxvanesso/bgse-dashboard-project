@@ -20,7 +20,7 @@
 <?php
     // Total Revenue by product
     
-    $query = "SELECT TRUNCATE(SUM(i.Sales),2), I.InvoiceDate FROM cigar.invoice_detail i INNER JOIN cigar.invoice I 
+    $query = "SELECT TRUNCATE(SUM(i.Sales),2), dayname(I.InvoiceDate) FROM cigar.invoice_detail i INNER JOIN cigar.invoice I 
     ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
     $title = "Sales by day";
     query_and_print_graph($query,$title,"Dolars");
