@@ -1,7 +1,7 @@
 library(RMySQL)
 
 #Connection to SQL
-db = dbConnect(MySQL(), user='root', password='root' , dbname='ecommerce', host='localhost')
+db = dbConnect(MySQL(), user='root', password='root' , dbname='cigar', host='localhost')
 
 ##### GENERATING THE CATEGORIES MAP
 
