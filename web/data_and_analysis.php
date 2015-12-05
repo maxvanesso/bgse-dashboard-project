@@ -30,9 +30,9 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, sum(i.Sales) as Total, 100*sum(i.Sales)/(select sum(i.Sales) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID inner join cigar.invoice I on i.InvoiceNumber=I.InvoiceNumber inner join cigar.client c on I.ClientID=c.ClientID where c.State in ('GU','PR','HI','AS','MP','VI')) as Percentage from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID inner join cigar.invoice I on i.InvoiceNumber=I.InvoiceNumber inner join cigar.client c on I.ClientID=c.ClientID where c.State in ('GU','PR','HI','AS','MP','VI') group by Brand order by Total desc limit 5";
-	$title = "Sales other States";
-	query_and_print_graph($query,$title,"Dollars");
+	$query = "SELECT b.CustomerID Customer, sum(a.Quantity*a.UnitPrice) Revenues from ecommerce.order_details a left join ecommerce.orders b on a.OrderID=b.OrderID group by CustomerID order by Revenues desc limit 20";
+	$title = "Customers by revenues";
+	query_and_print_graph($query,$title,"Euros");
 ?>
 
 <?php
