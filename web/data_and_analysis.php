@@ -23,7 +23,7 @@
     $query = "SELECT TRUNCATE(SUM(i.Sales),2), dayname(I.InvoiceDate) FROM cigar.invoice_detail i INNER JOIN cigar.invoice I 
     ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
     $title = "Sales by day";
-    query_and_print_graph($query,$title,"Dolars");
+    query_and_print_graph($query,$title,"Dolars") + nv.addGraph(showValues=TRUE);
 ?>
 	
 	<p>The chart below shows the best sold cigars based on a volume analysis. The interesting part here is to observe the difference between this first graph and the one below it,
