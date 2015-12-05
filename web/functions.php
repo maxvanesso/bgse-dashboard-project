@@ -3,8 +3,8 @@
 function connect_to_db() {    
     $host = "localhost";
     $dbuser = "root";
-    $dbpass = "root";
-    $dbname = "ecommerce";
+    $dbpass = "MyNewPass";
+    $dbname = "cigar";
 
     $link = mysql_connect($host,$dbuser,$dbpass);
 

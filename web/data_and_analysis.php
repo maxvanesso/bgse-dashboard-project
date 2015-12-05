@@ -20,9 +20,10 @@
 <?php
     // Total Revenue by product
     
-    $query = "SELECT ProductName, Revenue FROM ecommerce.ProductsVsCustomers_Pivot ORDER BY Revenue DESC limit 10";
-    $title = "Products by revenues";
-    query_and_print_graph($query,$title,"Euros");
+    $query = "SELECT SUM(i.Sales), I.InvoiceDate FROM cigar.invoice_detail i 
+    INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber";
+    $title = "Sales by day";
+    query_and_print_graph($query,$title,"Dolars");
 ?>
 	
 	<p>The chart below shows the results of a similar analysis, this time to rank the customers that contribute the most to total revenues. Only the top 20 customers are shown below.</p>
