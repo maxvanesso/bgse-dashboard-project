@@ -17,7 +17,7 @@ install)
 
 	mysql -u $user -p$pswd < db/cigar.sql
 	mysql -u $user -p$pswd < data/cigar-dump.sql
-	mysql -u $user -p$pswd < analysis/Customers_by_product.sql
+	#mysql -u $user -p$pswd < analysis/Customers_by_product.sql
 
 	mkdir -p "$target_dir/MyApp"
 	cp -rf web/* "$target_dir/MyApp"

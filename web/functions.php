@@ -1,7 +1,7 @@
 <?php
 
 function connect_to_db() {    
-    $host = "ubuntu";
+    $host = "localhost";
     $dbuser = "root";
     $dbpass = "root";
     $dbname = "cigar";
