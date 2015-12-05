@@ -30,15 +30,14 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, sum(i.Sales) as Total, 
-100*sum(i.Sales)/(select sum(i.Sales) as Total
-from product p inner join invoice_detail i on p.BrandID=i.BrandID 
-inner join invoice I on i.InvoiceNumber=I.InvoiceNumber
-inner join client c on I.ClientID=c.ClientID 
+	$query = "SELECT p.Brand, sum(i.Sales) as Total, 100*sum(i.Sales)/(select sum(i.Sales) as Total
+from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID 
+inner join cigar.invoice I on i.InvoiceNumber=I.InvoiceNumber
+inner join cigar.client c on I.ClientID=c.ClientID 
 where c.State in ('GU','PR','HI','AS','MP','VI')) as Percentage
-from product p inner join invoice_detail i on p.BrandID=i.BrandID 
-inner join invoice I on i.InvoiceNumber=I.InvoiceNumber
-inner join client c on I.ClientID=c.ClientID 
+from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID 
+inner join cigar.invoice I on i.InvoiceNumber=I.InvoiceNumber
+inner join cigar.client c on I.ClientID=c.ClientID 
 where c.State in ('GU','PR','HI','AS','MP','VI') 
 group by Brand order by Total desc limit 5";
 	$title = "Sales other States";
