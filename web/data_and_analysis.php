@@ -20,8 +20,7 @@
 <?php
     // Total Revenue by product
     
-    $query = "SELECT SUM(i.Sales), I.InvoiceDate FROM cigar.invoice_detail i 
-    INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber";
+    $query = "SELECT SUM(i.Sales), I.InvoiceDate FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber";
     $title = "Sales by day";
     query_and_print_graph($query,$title,"Dolars");
 ?>
