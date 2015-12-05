@@ -6,7 +6,7 @@ function connect_to_db() {
     $dbpass = "root";
     $dbname = "cigar";
 
-    $link = mysql_connect($host,$dbuser,$dbpass,$dbname);
+    $link = mysql_connect($host,$dbuser,$dbpass);
 
     if (!$link) {
         die('Could not connect: ' . mysql_error());
