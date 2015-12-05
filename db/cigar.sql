@@ -80,7 +80,7 @@ CREATE TABLE invoice_detail (
 	FOREIGN KEY(BrandID) REFERENCES product(BrandID)
 );
 
-DROP PROCEDURE getbestsellers;
+DROP PROCEDURE IF EXISTS getbestsellers;
 DELIMITER $$
 CREATE PROCEDURE getbestsellers(
 stateofinterest NVARCHAR(10),
@@ -101,7 +101,7 @@ END $$
 DELIMITER ;
 
 
-DROP PROCEDURE getbestprofiters;
+DROP PROCEDURE IF EXISTS getbestprofiters;
 DELIMITER $$
 CREATE PROCEDURE getbestprofiters(
 stateofinterest NVARCHAR(10),
