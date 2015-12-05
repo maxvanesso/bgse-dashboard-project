@@ -3,7 +3,7 @@
 function connect_to_db() {    
     $host = "localhost";
     $dbuser = "root";
-    $dbpass = "MyNewPass";
+    $dbpass = "root";
     $dbname = "cigar";
 
     $link = mysql_connect($host,$dbuser,$dbpass);
