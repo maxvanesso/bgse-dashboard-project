@@ -34,7 +34,7 @@
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total
 from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-group by Brand order by Total desc limit 5;";
+group by Brand order by Total desc limit 5";
 	$title = "Best sellers";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
@@ -46,18 +46,48 @@ group by Brand order by Total desc limit 5;";
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total
 from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-group by Brand order by Total asc limit 5;";
+group by Brand order by Total asc limit 5";
 	$title = "Least sellers";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
+<p>The chart below shows the best sold cigars based on a sales analysis. The interesting part here is to observe the difference between this first graph and the one below it,
+	the amount of cigars sold by some brands is... bla bla bla expand!!!</p>
+	
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT b.CustomerID Customer, sum(a.Quantity*a.UnitPrice) Revenues from ecommerce.order_details a left join ecommerce.orders b on a.OrderID=b.OrderID group by CustomerID order by Revenues desc limit 20";
-	$title = "Customers by revenues";
-	query_and_print_graph($query,$title,"Euros");
+	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total
+from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
+group by Brand order by Total desc limit 5";
+	$title = "Most profitables";
+	query_and_print_graph($query,$title,"Dollars");
 ?>
+
+<p>We can state that all the cigars are sold at least once but... bla bla bla expand!!!</p>
+
+<?php
+	// Page body. Write here your queries
+	
+	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total
+from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
+group by Brand order by Total asc limit 5";
+	$title = "Least profitables";
+	query_and_print_graph($query,$title,"Dollars");
+?>
+
+<p>Trying line chart for sales!!!</p>
+
+<?php
+	// Page body. Write here your queries
+	
+	$query = "SELECT I.InvoiceDate, sum(i.Sales) as Total
+from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber  
+group by InvoiceDate";
+	$title = "Least profitables";
+	query_and_print_series($query,$title,"Dollars");
+?>
+
 
 	<p>Once we have identified the best selling products and the top customers, we seek to improve our understanding of the relationships between them.</p>
 	
