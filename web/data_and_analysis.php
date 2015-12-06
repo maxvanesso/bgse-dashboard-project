@@ -21,6 +21,13 @@
 	the amount of cigars sold by some brands is... bla bla bla expand!!!</p>
 	
 <?php
+   // Total Revenue by product
+    
+   $query = "SELECT dayname(I.InvoiceDate) as Day, TRUNCATE(SUM(i.Sales),2) as Total_sales FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
+   $title = "Sales by day";
+   query_and_print_graph($query,$title,"Dolars");
+?>	
+<?php
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
