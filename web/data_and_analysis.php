@@ -39,6 +39,14 @@
 <p>We can state that all the cigars are sold at least once but... bla bla bla expand!!!</p>
 
 <?php
+    //Total Revenue by product
+    
+    $query = "SELECT ProductName, Revenue FROM ecommerce.ProductsVsCustomers_Pivot ORDER BY Revenue DESC limit 10";
+    $title = "Products by revenues";
+    query_and_print_graph($query,$title,"Euros");
+?>
+
+<?php
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
