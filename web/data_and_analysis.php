@@ -62,6 +62,14 @@
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
+<?php
+	// Page body. Write here your queries
+	
+	$query = "SELECT I.InvoiceDate, truncate(sum(i.Sales),2) as Total from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate";
+	$title = "Time series";
+	query_and_print_series($query,$title,"Dollars");
+?>
+
 	<p>Once we have identified the best selling products and the top customers, we seek to improve our understanding of the relationships between them.</p>
 	
 	<p> We start from considering associations between product categories as observed in past transactions. Specifically, the chart below shown the links between pairs of categories according to the number of times they are bought together. The thicker the network edge connecting two categories, the more often those two categories are found together in the customers' baskets. The size of the circles is proportional to the total revenues that each product categories generates.</p>
