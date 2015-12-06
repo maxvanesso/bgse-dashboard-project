@@ -41,9 +41,9 @@
 <?php
     //Total Revenue by product
     
-    $query = "SELECT ProductName, Revenue FROM ecommerce.ProductsVsCustomers_Pivot ORDER BY Revenue DESC limit 10";
-    $title = "Products by revenues";
-    query_and_print_graph($query,$title,"Euros");
+     $query = "SELECT ProductName, Revenue FROM ecommerce.ProductsVsCustomers_Pivot ORDER BY Revenue DESC limit 10";
+     $title = "Products by revenues";
+     query_and_print_graph($query,$title,"Euros");
 ?>
 
 <?php
