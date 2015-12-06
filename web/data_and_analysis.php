@@ -23,7 +23,7 @@
     $query = "SELECT TRUNCATE(SUM(i.Sales),2), dayname(I.InvoiceDate) FROM cigar.invoice_detail i INNER JOIN cigar.invoice I 
     ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
     $title = "Sales by day";
-    query_and_print_graph($query,$title,"Dolars") + nv.addGraph(showValues=TRUE);
+    query_and_print_graph($query,$title,"Dolars");
 ?>
 	
 	<p>The chart below shows the best sold cigars based on a volume analysis. The interesting part here is to observe the difference between this first graph and the one below it,
@@ -33,8 +33,8 @@
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total
-from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-group by Brand order by Total desc limit 5";
+	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
+	group by Brand order by Total desc limit 5";
 	$title = "Best sellers";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
@@ -45,8 +45,8 @@ group by Brand order by Total desc limit 5";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total
-from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-group by Brand order by Total asc limit 5";
+	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
+	group by Brand order by Total asc limit 5";
 	$title = "Least sellers";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
@@ -58,8 +58,8 @@ group by Brand order by Total asc limit 5";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total
-from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-group by Brand order by Total desc limit 5";
+	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
+	group by Brand order by Total desc limit 5";
 	$title = "Most profitables";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
@@ -70,8 +70,8 @@ group by Brand order by Total desc limit 5";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total
-from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-group by Brand order by Total asc limit 5";
+	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
+	group by Brand order by Total asc limit 5";
 	$title = "Least profitables";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
@@ -82,9 +82,9 @@ group by Brand order by Total asc limit 5";
 	// Page body. Write here your queries
 	
 	$query = "SELECT I.InvoiceDate, sum(i.Sales) as Total
-from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber  
-group by I.InvoiceDate";
-	$title = "Least profitables";
+	from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber  
+	group by I.InvoiceDate";
+	$title = "Time series";
 	query_and_print_series($query,$title,"Dollars");
 ?>
 
