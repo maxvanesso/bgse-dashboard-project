@@ -31,9 +31,9 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-	$title = "Best sellers";
-	query_and_print_graph($query,$title,"Number of cigars");
+		$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
+		$title = "Best sellers";
+		query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
 <p>We can state that all the cigars are sold at least once but... bla bla bla expand!!!</p>
