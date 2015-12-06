@@ -39,7 +39,21 @@
 	
 	<p>The chart below shows the results of a similar analysis, this time to rank the customers that contribute the most to total revenues. Only the top 20 customers are shown below.</p>
 	
+<?php
+	// Page body. Write here your queries
+	
+	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
+	$title = "Most profitables";
+	query_and_print_graph($query,$title,"Dollars");
+?>
 
+<?php
+	// Page body. Write here your queries
+	
+	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
+	$title = "Least profitables";
+	query_and_print_graph($query,$title,"Dollars");
+?>
 
 	<p>Once we have identified the best selling products and the top customers, we seek to improve our understanding of the relationships between them.</p>
 	
