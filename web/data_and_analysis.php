@@ -23,7 +23,7 @@
 <?php
    // Total Revenue by product
     
-   $query = "SELECT dayname(I.InvoiceDate) as Day, TRUNCATE(SUM(i.Sales),2) as Total_sales FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate) ORDER BY FIELD(dayname(I.InvoiceDate), Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)";
+   $query = "SELECT dayname(I.InvoiceDate) as Day, TRUNCATE(SUM(i.Sales),2) as Total_sales FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate) ORDER BY FIELD(dayname(I.InvoiceDate), 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')";
    $title = "Sales by day";
    query_and_print_graph($query,$title,"Dolars");
 ?>	
