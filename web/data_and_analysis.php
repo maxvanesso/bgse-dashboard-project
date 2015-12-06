@@ -19,11 +19,11 @@
 	
 	<p>The chart below shows the best sold cigars based on a volume analysis. The interesting part here is to observe the difference between this first graph and the one below it,
 	the amount of cigars sold by some brands is... bla bla bla expand!!!</p>
-	
+
 <?php
    // Total Revenue by product
     
-   $query = "SELECT dayname(I.InvoiceDate) as Day, TRUNCATE(SUM(i.Sales),2) as Total_sales FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
+   $query = "SELECT dayname(I.InvoiceDate) as Day, TRUNCATE(SUM(i.Sales),2) as Total_sales FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate) ORDER BY FIELD(dayname(I.InvoiceDate), Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)";
    $title = "Sales by day";
    query_and_print_graph($query,$title,"Dolars");
 ?>	
