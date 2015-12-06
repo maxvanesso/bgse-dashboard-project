@@ -31,9 +31,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, sum(i.Volume) as Total 
-	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID 
-	group by Brand order by Total desc limit 5";
+	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
 	$title = "Best sellers";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
@@ -43,9 +41,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, sum(i.Volume) as Total
-	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-	group by Brand order by Total asc limit 5";
+	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
 	$title = "Least sellers";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
@@ -56,9 +52,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total
-	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-	group by Brand order by Total desc limit 5";
+	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
 	$title = "Most profitables";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
@@ -68,9 +62,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total
-	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID  
-	group by Brand order by Total asc limit 5";
+	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
 	$title = "Least profitables";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
@@ -80,9 +72,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT I.InvoiceDate, sum(i.Sales) as Total
-	from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber  
-	group by I.InvoiceDate";
+	$query = "SELECT I.InvoiceDate, sum(i.Sales) as Total from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate";
 	$title = "Time series";
 	query_and_print_series($query,$title,"Dollars");
 ?>
@@ -92,7 +82,7 @@
 	
 	<p> We start from considering associations between product categories as observed in past transactions. Specifically, the chart below shown the links between pairs of categories according to the number of times they are bought together. The thicker the network edge connecting two categories, the more often those two categories are found together in the customers' baskets. The size of the circles is proportional to the total revenues that each product categories generates.</p>
 	
-	<center><img src="Rplotfinal.svg" style="width: 40%"></center>
+	<center><img src="Rplotfinal.svg" style="width: 80%"></center>
 
 	<p>The information provided in the network graph above could be used to informed marketing campaigns that cover two or more product categories, so that the marketing team could deploy offers for products that belong to categories that "go together".
 	
