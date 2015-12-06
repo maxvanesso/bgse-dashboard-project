@@ -62,13 +62,7 @@
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
-<?php
-	// Page body. Write here your queries
-	
-	$query = "SELECT I.InvoiceDate, truncate(sum(i.Sales),2) as Total from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate";
-	$title = "Time series";
-	query_and_print_series($query,$title,"Dollars");
-?>
+
 
 	<p>Once we have identified the best selling products and the top customers, we seek to improve our understanding of the relationships between them.</p>
 	
@@ -80,7 +74,13 @@
 	
 	<p> We then go one layer further to look at the associations between products. The following table shows a ranking of pairs of products that tend to be purchased together. The pairs of products are ranked according to the number of times each pair appears in a transaction. To focus on the most relevant information, we show only the product pairs that appear at least five times. While this information does not, on its own, provide a fully-fledge recommendation system, it can provide insight on customers behaviour that can be used in setting up marketing campaigns.</p>
 	
-
+<?php
+	// Page body. Write here your queries
+	
+	$query = "SELECT truncate(sum(i.Sales),2) as Total, I.InvoiceDate from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate";
+	$title = "Time series";
+	query_and_print_series($query,$title,"Dollars");
+?>
 	<p> In the next tab, we take this analysis further by implementing a product recommendation system and by looking at customers marginal contribution to revenues using a LASSO regression.</p>
 
 
