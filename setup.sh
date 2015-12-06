@@ -39,7 +39,7 @@ run)
 	R CMD BATCH analysis/analysis.R 
 	cat analysis.Rout
 	rm analysis.Rout
-	cp web/categories_network.png "$target_dir/MyApp"
+	cp web/Rplotfinal.svg "$target_dir/MyApp"
 
 	;;
 
