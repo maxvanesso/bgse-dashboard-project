@@ -18,11 +18,11 @@
 	<p> The chart below shows the best selling products ranked according to the revenues they generate. Only the top 10 best selling products are shown.</p>
 
 <?php
-    // Total Revenue by product
+   // Total Revenue by product
     
-    $query = "SELECT TRUNCATE(SUM(i.Sales),2), dayname(I.InvoiceDate) FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
-    $title = "Sales by day";
-    query_and_print_graph($query,$title,"Dolars");
+   $query = "SELECT TRUNCATE(SUM(i.Sales),2), dayname(I.InvoiceDate) FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate)";
+   $title = "Sales by day";
+   query_and_print_graph($query,$title,"Dolars");
 ?>
 	
 	<p>The chart below shows the best sold cigars based on a volume analysis. The interesting part here is to observe the difference between this first graph and the one below it,
@@ -31,12 +31,12 @@
 <?php
 	// Page body. Write here your queries
 	
-		$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-		$title = "Best sellers";
-		query_and_print_graph($query,$title,"Number of cigars");
+	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
+	$title = "Best sellers";
+	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
-<p>We can state that all the cigars are sold at least once but... bla bla bla expand!!!</p>
+	<p>We can state that all the cigars are sold at least once but... bla bla bla expand!!!</p>
 
 <?php
     //Total Revenue by product
@@ -54,7 +54,7 @@
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
-<p>The chart below shows the best sold cigars based on a sales analysis. The interesting part here is to observe the difference between this first graph and the one below it,
+	<p>The chart below shows the best sold cigars based on a sales analysis. The interesting part here is to observe the difference between this first graph and the one below it,
 	the amount of cigars sold by some brands is... bla bla bla expand!!!</p>
 	
 <?php
@@ -75,7 +75,7 @@
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
-<p>Trying line chart for sales!!!</p>
+	<p>Trying line chart for sales!!!</p>
 
 <?php
 	// Page body. Write here your queries
