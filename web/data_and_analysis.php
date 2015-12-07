@@ -77,7 +77,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT date(I.InvoiceDate), truncate(sum(i.Sales),2) as Total from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by date(I.InvoiceDate)";
+	$query = "SELECT truncate(sum(i.Sales),2) as Total from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate";
 	$title = "Time series";
 	query_and_print_series($query,$title,"Dollars");
 ?>
