@@ -52,6 +52,8 @@
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
+	<p>Here we display the cigar brands which generated the most profit over the time period we evaluated. We notice that only two of the top 5 brands are also in the most sold brands by volume, highlighting the differences between products which result in the highest profit margins and those which consumers are most drawn towards.</p>
+
 <?php
 	// Page body. Write here your queries
 	
@@ -60,17 +62,13 @@
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
+	<p>Looking at the least profitable brands, there is a higher crossover with the least sold brands per volume. Once again, this gives us cues as to which brands could be cut entirely from the product portfolio, or re-branded entirely.</p>
 
-
-	<p>Once we have identified the best selling products and the top customers, we seek to improve our understanding of the relationships between them.</p>
-	
-	<p> We start from considering associations between product categories as observed in past transactions. Specifically, the chart below shown the links between pairs of categories according to the number of times they are bought together. The thicker the network edge connecting two categories, the more often those two categories are found together in the customers' baskets. The size of the circles is proportional to the total revenues that each product categories generates.</p>
-	
+	<p>Another important aspect of business intelligence is to map out where the customers are located. JR Cigars customers in North America appear to cluster on the East Coast, with a particularly large base in New York and Florida, as well as in California. Smaller clusters appear in Texas and in the Great Lakes Region.</p>
+		
 	<center><img src="Rplotfinal.svg" style="width: 80%"></center>
 
-	<p>The information provided in the network graph above could be used to informed marketing campaigns that cover two or more product categories, so that the marketing team could deploy offers for products that belong to categories that "go together".
-	
-	<p> We then go one layer further to look at the associations between products. The following table shows a ranking of pairs of products that tend to be purchased together. The pairs of products are ranked according to the number of times each pair appears in a transaction. To focus on the most relevant information, we show only the product pairs that appear at least five times. While this information does not, on its own, provide a fully-fledge recommendation system, it can provide insight on customers behaviour that can be used in setting up marketing campaigns.</p>
+	<p>Such information could lead to targeted ad campaigns from the marketing department. Of additional interest could be a further analytical break down of the clusters of customers to better understand consumption drivers. Florida for example has a big customer base because of a large population of retirees, typically more fond of cigars than the rest of the population.</p>
 	
 <?php
 	// Page body. Write here your queries
@@ -89,8 +87,6 @@
 	<p>Below we show the top 20 product recommendation rules identified by the <b>Apriori algorithm</b>. The table can be read as follows: for each rule, the left-hand side shows a potential basket that the customer has put together, while the right-hand side shows the additional product that could be purchased to "complete that basket".</p>
 
 	<p>For example, the first rule indicates that a customer that has already added dried applies and sild (herring) to her basket, would be recommended gorgonzola cheese <em>(note: it sounds disgusting but the customer is always right!)</em> The recommendations are based on the analysis of historical transaction already stored in the database.</p>
-			
-
 
 	<p>We build a log-log linear regression model of the revenues per product using the quantity purchased by the different customers as explanatory factors. We consider each different product as a new observation of the revenue generated. Other explanatory factors have been considered such as the price of the product, the quantity per product, the average expenses, or the mean product price. However, the quantity of each product purchased by the different customers gave the best interpretability of the results and provides the best matching to the recommendation system. Since most of the customers only bought a small fraction of the products our data matrix is sparse. We use the Lasso regression since it is optimal for sparse data, but also because it allows us to focus on the most relevant customers.</p>
 
