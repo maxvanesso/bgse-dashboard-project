@@ -121,6 +121,8 @@ GROUP BY Brand ORDER BY Total DESC LIMIT number_rank;
 END $$
 DELIMITER ;
 
+set @rank:=0;
+
 /*
 END CODE // END CODE // END CODE
 */
