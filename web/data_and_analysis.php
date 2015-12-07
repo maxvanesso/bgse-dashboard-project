@@ -13,13 +13,8 @@
 	
 	<h2>Data</h2>
 	
-	<p>In this section we carry out an initial analysis of past transactions, with the objective of gathering information about the categories, products and customers that tend to generate the highest revenues. The results shown in this page can provide insights to inform the activities of the sales team. This information, together with the recommendation system and customer analysis which we have implemented in the next page, can support the activities of the company's marketing team.</p>
+	<p>We carried out an analysis of past transactions, with the objective of gathering information on the types of products that generate the highest revenues as well as extracting information on the customer base. The results displayed in this page provide valuable insights to teams in sales and marketing aiming to refine their strategy.</p>
 	
-	<p> The chart below shows the best selling products ranked according to the revenues they generate. Only the top 10 best selling products are shown.</p>
-	
-	<p>The chart below shows the best sold cigars based on a volume analysis. The interesting part here is to observe the difference between this first graph and the one below it,
-	the amount of cigars sold by some brands is... bla bla bla expand!!!</p>
-
 <?php
    // Total Revenue by product
     
@@ -27,6 +22,9 @@
    $title = "Sales by day";
    query_and_print_graph($query,$title,"Dolars");
 ?>	
+
+<p>Here we can see the average amount of revenue generated per day of the week. The fact that Monday is the highest grossing day on average could be explained by the wholesaling nature of a large portion of JR Cigar's activities - clients will tend to replenish stocks sold over the past week and weekend.</p>
+
 <?php
 	// Page body. Write here your queries
 	
@@ -35,7 +33,7 @@
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
-	<p>We can state that all the cigars are sold at least once but... bla bla bla expand!!!</p>
+	<p>This chart indicates the brands of cigars that were the most in demand over the period of time covered by the dataset. The metric examined here is the total number of cigars sold and could provide cues as to which brands could be put on sale.</p>
 <?php
 	// Page body. Write here your queries
 	
@@ -44,7 +42,7 @@
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 	
-	<p>The chart below shows the results of a similar analysis, this time to rank the customers that contribute the most to total revenues. Only the top 20 customers are shown below.</p>
+	<p>At the other end of the spectrum, this chart indicates the worst performing brands of cigars in terms of volume sold. Managers could either decide to remove them altogether from the catalogue, or come up with innovative marketing strategies specifically tailored to increasing the visibility and reputation of these brands.</p>
 	
 <?php
 	// Page body. Write here your queries

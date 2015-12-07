@@ -60,22 +60,26 @@ function show_content(optionsId) {
 
 		<div id="home">
 			<h2>Home</h2>
-			<h3>The challenge</h3>
+			<h3>The Challenge</h3>
 			
-			<p>Introduction on the challenge this is something. And trying something else.</p>
+			<p>JR Cigars originally started as a small cigar shop in Manhattan. Today, the company is one of the leading US wholesalers and retailers of cigars and tobacco related products with brick and mortar stores in North Carolina, New Jersey, DC and Michigan. They offer a wide selection of hand-rolled cigars from over 500 brands, ranging from 5 cents to $50.00 apiece.</p>
+
+			<p>From a data science perspective, JR Cigars is interesting primarily because of its online and catalog sales operations from which originate the bulk of its income stream. We were able to get ahold of 2 years worth of data containing:</p>
 			
 			<ul style="list-style-type:circle">
-  				<li> The first objective can be explained here. </li>
-  				<li> Here we explain some interesting stuff.</li>
-  				<li> Test for adding a new bullet point.</li>
+  				<li> Sales information (invoice number, date of purchase, volume, cost) </li>
+  				<li> Client information (ID number, state of residence, age)</li>
+  				<li> Product information (brand, manufacturer, product category)</li>
 			</ul>
 			
-			<h3>The solution</h3>
+			<p>The original dataset spans about a million rows for a total of 15 million entries. The challenge for us was to leverage this dataset into useful business intelligence, that could for example be leveraged by the company's managers to increase profitability.</p>
+
+			<h3>The Solution</h3>
 						
-			<p>We explain our work:</p>
+			<p>We decided to adopt a two pronged approach in terms of using and treating the data.</p>
 				<ul style="list-style-type:circle">
-					<li> Here we can also explain our recommendation system, check code for linking <b><a href="http://www.wikipedia.org/wiki/Apriori_algorithm" target="_blank">Apriori algorithm.</a></b>, maybe we can link it to the page where our recommendation system is explained .</li>
-					<li> code to make bold words here <b>seems like doing latex</b>.</li>
+					<li> First, we sought to provide insights as to what was actually going on in the dataset. Displaying the right kind of information is at the heart of business intelligence. This is the descriptive part which is covered in the Data Section of our dashboard.</li>
+					<li> Second, we decided to produce inferential statistics in order to boost future sales and revenue. The two products we designed are a recommender system, based on the purchase history of clients, and a time series analysis used to predict sales. These results can be found in the Analysis Section of our Dashboard</li>
 				</ul>
 						
 		</div>	
