@@ -13,6 +13,13 @@ target_dir='/var/www/html'
 case $cmd in
 
 install)
+	ls
+	mkdir /home/ubuntu/projects/Rlibs
+	chmod 777 /home/ubuntu/projects/Rlibs
+	echo R_LIBS=/home/ubuntu/projects/Rlibs > ~/.Renviron 
+	echo R_LIBS_USER=/home/ubuntu/projects/Rlibs > ~/.Renviron 
+	echo 'local({r <- getOption("repos"); r["CRAN"] <- "https://cran.rstudio.com"; options(repos=r)})' > ~/.Rprofile
+	sudo Rscript --vanilla setup.R
 	echo "Installing"
 
 	mysql -u $user -p$pswd < db/cigar.sql
@@ -34,12 +41,6 @@ uninstall)
 	echo "done!"
 	;;
 	
-	mkdir home/ubuntu/projects/Rlibs
-	chmod 777 home/ubuntu/projects/Rlibs
-	echo R_LIBS=home/ubuntu/projects/Rlibs > ~/.Renviron 
-	echo R_LIBS_USER=home/ubuntu/projects/Rlibs > ~/.Renviron 
-	echo 'local({r <- getOption("repos"); r["CRAN"] <- "https://cran.rstudio.com"; options(repos=r)})' > ~/.Rprofile
-	sudo Rscript --vanilla setup.R
 
 run)
 	echo "Running"
