@@ -17,14 +17,10 @@ rm( list = ls() )
 
 ### 0.1 Packages
 
-install.packages("recommenderlab", repos="http://cran.r-project.org")
-install.packages("glmnet", repos="http://cran.r-project.org")
-
 library("RMySQL")
 library("forecast")
 library("lars")
-library("recommenderlab") 
-library("glmnet")
+library("recommenderlab")  
 
 ### 0.2 Initíalize functions
 
