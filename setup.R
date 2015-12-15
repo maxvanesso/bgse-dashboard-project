@@ -1,2 +1,2 @@
-install.packages("recommenderlab", repos="http://cran.r-project.org", lib="/home/ubuntu/projects/Rlibs/")
-install.packages("glmnet", repos="http://cran.r-project.org", lib="/home/ubuntu/projects/Rlibs/")
+install.packages("recommenderlab", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
+install.packages("glmnet", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
