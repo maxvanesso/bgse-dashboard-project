@@ -88,7 +88,7 @@ function show_content(optionsId) {
 	
 	</div>
 
-	<div>	<center><img src="recomsystem.png" style="width: 80%"></center></div>
+	<div>	<center><img src="recomsystem.png" style="width: 80%"></img></center></div>
 
 	<div id="footer">Project team: Felix Gutmann, Marco Fayet, Max van Esso</div>
 
