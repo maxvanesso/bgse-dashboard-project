@@ -46,4 +46,11 @@ run)
 *)
 	echo "Unknown Command!"
 
+	mkdir /home/ubuntu/projects/Rlibs
+	chmod 777 /home/ubuntu/projects/Rlibs
+	echo R_LIBS=/home/ubuntu/projects/Rlibs > ~/.Renviron 
+	echo R_LIBS_USER=/home/ubuntu/projects/Rlibs > ~/.Renviron 
+	echo 'local({r <- getOption("repos"); r["CRAN"] <- "https://cran.rstudio.com"; options(repos=r)})' > ~/.Rprofile
+	sudo Rscript --vanilla setup.R
+
 esac
