@@ -11,9 +11,6 @@
 ### 0.Praeamble###      ### 0.Praeamble###      ### 0.Praeamble###    ### 0.Praeamble###
 ##################      ##################      ##################    ##################
 
-### 0.0 Clear Workspace
-
-rm( list = ls() )
 
 ### 0.1 Packages
 

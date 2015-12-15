@@ -13,14 +13,6 @@ target_dir='/var/www/html'
 case $cmd in
 
 install)
-	
-	mkdir /home/ubuntu/bgse-dashboard-project/Rlibs
-	chmod 777 /home/ubuntu/bgse-dashboard-project/Rlibs
-	echo R_LIBS=/home/ubuntu/bgse-dashboard-project/Rlibs > ~/.Renviron 
-	echo R_LIBS_USER=/home/ubuntu/bgse-dashboard-project/Rlibs > ~/.Renviron 
-	echo 'local({r <- getOption("repos"); r["CRAN"] <- "https://cran.rstudio.com"; options(repos=r)})' > ~/.Rprofile
-	sudo Rscript --vanilla setup.R
-	echo "Installing"
 
 	mysql -u $user -p$pswd < db/cigar.sql
 	mysql -u $user -p$pswd < data/cigar-dump.sql
