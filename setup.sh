@@ -13,7 +13,7 @@ target_dir='/var/www/html'
 case $cmd in
 
 install)
-	ls
+	
 	mkdir /home/ubuntu/bgse-dashboard-project/Rlibs
 	chmod 777 /home/ubuntu/bgse-dashboard-project/Rlibs
 	echo R_LIBS=/home/ubuntu/bgse-dashboard-project/Rlibs > ~/.Renviron 
