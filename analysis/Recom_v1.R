@@ -122,11 +122,11 @@ for(i in 1:nrow(top)){
   rec[i] <- unlist(as(predict(Rec.model, affinity.matrix[as.character(top$ClientID[i])], n=1),"list"))  
 }
 
-top <- cbind(top,Recomandations=rec)
+top <- cbind(top,Recommendations=rec)
 
 #Exporting SQL table
-dbSendQuery(data.base,"DROP TABLE IF EXISTS recomandation")
-dbWriteTable(conn = data.base, name="recomandation", value=top, row.names=FALSE)
+dbSendQuery(data.base,"DROP TABLE IF EXISTS recommendation")
+dbWriteTable(conn = data.base, name="recommendation", value=top, row.names=FALSE)
 
 
 
