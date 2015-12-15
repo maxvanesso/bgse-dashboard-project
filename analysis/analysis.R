@@ -1,126 +1,135 @@
-library(RMySQL)
+#########################################################################################
+### Project 1 # Project 1 # Project 1 # Project 1 # Project 1 # Project 1 # Project 1 ###
+#########################################################################################
 
-#Connection to SQL
-db = dbConnect(MySQL(), user='root', password='root' , dbname='cigar', host='localhost')
+#Due:     04.12.15 
+#Course:  Computing lab / Data warehousing
+#Type:    Project
+#Module:  Recommendation sector 
 
-##### GENERATING THE CATEGORIES MAP
+##################      ##################      ##################    ##################
+### 0.Praeamble###      ### 0.Praeamble###      ### 0.Praeamble###    ### 0.Praeamble###
+##################      ##################      ##################    ##################
 
-library(igraph)
+### 0.0 Clear Workspace
 
-# Import data
+rm( list = ls() )
 
-# result = dbSendQuery(db, "SELECT C1.CategoryName as Cat1, 
-#        		                C2.CategoryName as Cat2,
-#        		                Count(DISTINCT O1.OrderID) as Weight
-# 			                    FROM products P1
-#        		                JOIN products P2
-#          	                ON P1.ProductID != P2.ProductID 
-#         	                JOIN categories C1 on P1.CategoryID=C1.CategoryID 
-#         	                JOIN categories C2 on P2.CategoryID=C2.CategoryID
-#        		                LEFT JOIN order_details O1
-#                           INNER JOIN order_details O2
-#                           ON O1.OrderID = O2.OrderID
-#          	                ON O1.ProductID = P1.ProductId
-#                           AND O2.ProductID = P2.ProductID 
-#   			                  WHERE P1.CategoryID > P2.CategoryID          
-# 			                    GROUP  BY P1.CategoryID, P2.CategoryID
-# 			                    ORDER BY Weight DESC")
-# relations = fetch(result, n=-1)
-# colnames(relations) = c("from","to","weight")
-# 
-# result = dbSendQuery(db, "SELECT C1.CategoryName, SUM(O1.UnitPrice*O1.Quantity) as Revenue
-#                           FROM products P1
-#                           JOIN categories C1
-#                           ON P1.CategoryID= C1.CategoryID
-#                           LEFT JOIN ecommerce.order_details O1
-#                           ON O1.ProductID = P1.ProductId
-#                           GROUP BY CategoryName
-#                           ORDER BY Revenue DESC")
-# totalrevenue = fetch(result, n=-1)
-# 
-# # Load (DIRECTED) graph from data frame 
-# 
-# 
-# # Define size of nodes
-# node.size<-setNames(totalrevenue$Revenue,totalrevenue$CategoryName)
-# names <-as.vector(totalrevenue$CategoryName)
+### 0.1 Packages
 
-# library(ggmap)
-# library(ggplot2)
-# library(maps)
-# 
-# map <- get_map(location = "united states", zoom = 3, source = 'google') #get a map of USA from google source
-# g <- ggmap(map) +
-# geom_point(aes(x = longitude, y = latitude, size = pop), data = map_matrix1, colour="red", alpha=0.9)
+library("RMySQL")
+library("forecast")
+library("lars")
+library("recommenderlab")  
+
+### 0.2 Initíalize functions
+
+  ### Call data from existing data base
+  query <- function(db,que,n){
+
+      temp <<- dbSendQuery(db,que)
+      out  <- fetch(temp,n) 
+      dbClearResult(temp)
+      return(out)
+      
+  }
+
+  ### Conditional summary
+  inf.by <- function(cond,sumvar,fun){
+
+      con <- unique(cond)
+      out <- invisible(sapply(con, function(i){
+        pos <- which(cond==i)
+        fun(sumvar[pos])
+      }))
+      x <- data.frame(out)
+      return(data.frame(Condition=con,Summary=x$out))
+
+  }
+
+### 0.3 Connect to database / Get summary
+
+data.base   <- dbConnect( MySQL() , user='root' , password='' ,dbname='cigar' , host='localhost' )
+tab.names   <- dbListTables( data.base )
+field.names <- list()
+
+for( i in 1:length( tab.names ) ){
+
+  field.names[[i]] <- dbListFields( data.base, tab.names[i] )
+
+}
+
+names(field.names) <- tab.names
+
+##################################################################################
+#Start code # Start # code # Start code # Start code # Start code # Start code ###
+##################################################################################
+
+# Get data from MySQL database
+
+que4 <- "SELECT p.Brand, SUM(i.Volume), c.ClientID FROM product p INNER JOIN invoice_detail i
+         ON p.BrandID=i.BrandID INNER JOIN invoice I ON i.InvoiceNumber=I.InvoiceNumber
+         INNER JOIN client c ON I.ClientID=c.ClientID GROUP BY ClientID, Brand"
+
+dat1  <- query(data.base,que4,-1)
+
+que5 <- "SELECT c.ClientID, SUM(i.Volume) AS TotalVolume FROM invoice_detail i INNER JOIN invoice I
+         ON i.InvoiceNumber=I.InvoiceNumber INNER JOIN client c ON I.ClientID=c.ClientID
+         GROUP BY ClientID" 
+
+dat2 <- query(data.base,que5,-1)
+
+# Data manipulation
+
+merge.clientID    <- merge( dat1 , dat2 , by.dat1 = "ClientID", by.dat2 = "ClientID" )
+preRank           <- cbind( merge.clientID , ( merge.clientID[,3] / merge.clientID$TotalVolume ) *10 )
+colnames(preRank) <- c("ClientId","Brand","Total Brand Volume","Total Volume","Rank" ) 
+Rank.matrix       <- preRank[,-3:-4]
+rank.table        <- table( Rank.matrix $ClientId , Rank.matrix $Brand )
+ranks             <- as.vector( Rank.matrix [,3] ) 
+# Multiplying the ones in the transposed table by the ranks
+trank.table       <- t( rank.table )
+trank.table[as.logical((trank.table))] <- ranks 
+
+# Re-transposing it to have the rank matrix
+finalrank.table   <- t(trank.table) 
+finalrank.matrix  <- as.data.frame.matrix(finalrank.table)
+finalrank.matrix2 <- as.matrix(finalrank.matrix)
+
+# Final adjustments - Replace zero by NA
+finalrank.matrix2[finalrank.matrix2==0] <- NA
+
+# Create Affinity matrix
+affinity.matrix   <- as(finalrank.matrix2, "realRatingMatrix")
+
+# Train recommedation model
+Rec.model <- Recommender(affinity.matrix[1:4999],
+                         method = "UBCF", 
+                         param=list(normalize = "Z-score", method = "Jaccard" , nn = 5, minRating = 0 )
+                        )
+
+# Estimate items for top clients
+
+que6 <- "select c.ClientID, sum(i.Volume) as TotalVolume, p.Brand from product p inner join invoice_detail i
+         on p.BrandID=i.BrandID inner join invoice I on i.InvoiceNumber=I.InvoiceNumber
+         inner join client c on I.ClientID=c.ClientID group by ClientID, Brand order by TotalVolume desc limit 5"
+
+top <- query(data.base,que6,-1)
+
+rec <- c()
+id <- top$ClientID
+for(i in 1:nrow(top)){
+  rec[i] <- unlist(as(predict(Rec.model, affinity.matrix[as.character(top$ClientID[i])], n=1),"list"))  
+}
+
+top <- cbind(top,Recommendations=rec)
+
+#Exporting SQL table
+dbSendQuery(data.base,"DROP TABLE IF EXISTS recommendation")
+dbWriteTable(conn = data.base, name="recommendation", value=top, row.names=FALSE)
 
 
-# Plot and save graph
-png("web/Rplotfinal.svg")
-#plot(c(1,2,3))
-# plot(g,
-#      edge.width=E(g)$weight/20,
-#      vertex.label.cex=1.1,
-#      vertex.label.family="Helvetica"
-# )
-dev.off()
 
-# #### IMPLEMENTATION OF APRIORI ALGORITHM ####
-# 
-# library(arules)
-# 
-# #Run query of Interest
-# result = dbSendQuery(db, "select distinct(a.OrderID), b.ProductName , b.ProductID from order_details a join products b on a.ProductID = b.ProductID order by a.OrderID")
-# data = fetch(result, n=-1)
-# 
-# #Prepare data for arule fuction
-# b<-split(data$ProductName, data$OrderID)
-# c<-as(b, "transactions")
-# 
-# #Finding rules
-# rules<-apriori(c, parameter=list(supp=0.002, conf=0.8))
-# inspect(rules)
-# 
-# # Turning output into required form
-# d<-as(rules, "data.frame")
-# out<-as.data.frame(d[1:20,1])
-# colnames(out)<-"Rules"
-# 
-# #Exporting SQL table
-# dbSendQuery(db,"drop table if exists apriori")
-# dbWriteTable(conn = db,name="apriori", value=out, row.names=FALSE)
-# 
-# #### IMPLEMENTATION OF LASSO REGRESSION ####
-# 
-# #Extract data from data set
-# result = dbSendQuery(db, "select * from ProductsVsCustomers_Pivot")
-# dataPCsC = fetch(result, n=-1)
-# result1 = dbSendQuery(db, "SELECT b.CustomerID Customer, sum(a.Quantity*a.UnitPrice) Amount, count(b.OrderID) N_Orders from order_details a left join orders b on a.OrderID=b.OrderID group by CustomerID order by Amount desc limit 20;")
-# dataPVsC = fetch(result1, n=-1)
-# 
-# #View(dataPVsC)
-# dataPVsC[,1]
-# y<-as.matrix(dataPCsC[,3])
-# x <- dataPCsC[,c(dataPVsC[,1])] # Using best 20 customers
-# row.names(x)<-dataPCsC[,2]
-# x[is.na(x)] <- 0.00000000001
-# z <- as.matrix(x)
-# 
-# ## Lasso Coef using Package
-# library(lars)
-# 
-# set.seed(1)
-# lasso<-lars(log(z),log(y), type = "lasso",trace=TRUE, use.Gram = TRUE)
-# cv.lasso<-cv.lars(z,y, type="lasso")
-# limit<-min(cv.lasso$cv)+cv.lasso$cv.error[which.min(cv.lasso$cv)]
-# s.cv<-cv.lasso$index[min(which(cv.lasso$cv<limit))]
-# lasso.coef<-as.data.frame(round(coef(lasso, s = s.cv, mode="fraction")*100,digits = 4))
-# colnames(lasso.coef)<-c("Percentage")
-# vvv<-cbind(Customer=rownames(lasso.coef),lasso.coef)
-# rownames(vvv)<-NULL
-# TableFinal<-vvv[order(-vvv$Percentage),]
-# 
-# #Exporting SQL table
-# dbSendQuery(db,"drop table if exists top_customers")
-# dbWriteTable(conn = db,name="top_customers", value=TableFinal, row.names=FALSE)
+
 
 
