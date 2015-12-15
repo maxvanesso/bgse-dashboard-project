@@ -87,7 +87,7 @@
 <?php
 	// Most sold product pairs
 	
-	$query = "SELECT * from cigar.recommendation";
+	$query = "SELECT * from recommendation";
 	$title = "REcom";
 	query_and_print_table($query,$title);
 	echo "";
