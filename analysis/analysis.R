@@ -48,7 +48,7 @@ library("recommenderlab")
 
 ### 0.3 Connect to database / Get summary
 
-data.base   <- dbConnect( MySQL() , user='root' , password='' ,dbname='cigar' , host='localhost' )
+data.base   <- dbConnect( MySQL() , user='root' , password='root' ,dbname='cigar' , host='localhost' )
 tab.names   <- dbListTables( data.base )
 field.names <- list()
 
