@@ -128,7 +128,13 @@ dbSendQuery(data.base,"DROP TABLE IF EXISTS recommendation")
 dbWriteTable(conn = data.base, name="recommendation", value=top, row.names=FALSE)
 
 
+q <- "SELECT truncate(i.Sales,2) as Sales from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate"
+res <- query(data.base,q,-1)
+n <- 1:length(res)
+o <- data.frame(cbind(n,res))
 
+dbSendQuery(data.base,"DROP TABLE IF EXISTS sales")
+dbWriteTable(conn = data.base, name="sales", value=o, row.names=FALSE)
 
 
 
