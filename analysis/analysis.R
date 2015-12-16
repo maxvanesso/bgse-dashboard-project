@@ -16,7 +16,7 @@
 
 install.packages("recommenderlab", repos="http://cran.r-project.org")
 install.packages("glmnet", repos="http://cran.r-project.org")
-install.packages("RMySQL", repos="http://cran.r-project.org")
+install.packages("RMySQL")
 install.packages("lars", repos="http://cran.r-project.org")
 install.packages("forecast", repos="http://cran.r-project.org")
 
