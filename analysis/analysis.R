@@ -14,11 +14,11 @@
 
 ### 0.1 Packages
 
-install.packages("recommenderlab", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
-install.packages("glmnet", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
-install.packages("RMySQL", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
-install.packages("lars", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
-install.packages("forecast", repos="http://cran.r-project.org", lib="/home/ubuntu/bgse-dashboard-project/Rlibs/")
+install.packages("recommenderlab", repos="http://cran.r-project.org")
+install.packages("glmnet", repos="http://cran.r-project.org")
+install.packages("RMySQL", repos="http://cran.r-project.org")
+install.packages("lars", repos="http://cran.r-project.org")
+install.packages("forecast", repos="http://cran.r-project.org")
 
 library("RMySQL")
 library("forecast")
