@@ -328,7 +328,7 @@ n <- 1:length(LASpre)
 predictions <- data.frame(cbind(time=n,sales=pred.y,lasso=as.numeric(LASpre),ridge=as.numeric(RIDpre),elastic=as.numeric(ELApre)))
 
 dbSendQuery(data.base,"DROP TABLE IF EXISTS predictions")
-dbWriteTable(conn = data.base, name="predictions", value=o, row.names=FALSE)
+dbWriteTable(conn = data.base, name="predictions", value=predictions, row.names=FALSE)
 
 ###################################################################################################
 ###### END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE ######
