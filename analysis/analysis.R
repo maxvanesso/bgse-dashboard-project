@@ -277,12 +277,6 @@ pred.y <- brand.y[457:length(brand.y)]
 
 # 2.4. Fit models
 
-# OLS - Benchmark
-OLS.fit 	     <- lm(y ~ as.data.frame(tsbr.lagged$y[1:length(as.data.frame(tsbr.lagged$y)-1)]) ) 
-OLS.coef       <- coefficients(OLS.fit)
-OLS.mse        <- MSE(OLS.fit)
-OLS.fitted     <- fitted.values(OLS.fit)
-
 # Lasso regression
 lasso          <- glmnet(X, y, alpha=1)
 lasso.fit 	   <- cv.glmnet(X, y, alpha=1)
@@ -303,7 +297,6 @@ elastic.mse    <- elastic.fit$cvm[elastic.fit$lambda == elastic.fit$lambda.min]
 
 # 2.4. Prediction of 2014
 
-OLSpre <- predict(OLS.fit,as.data.frame(pred.x))
 LASpre <- predict(lasso.fit ,  pred.x,  s = "lambda.min")
 RIDpre <- predict(ridge.fit ,  pred.x,  s = "lambda.min")
 ELApre <- predict(elastic.fit, pred.x,  s = "lambda.min")
