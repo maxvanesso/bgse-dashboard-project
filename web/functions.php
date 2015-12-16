@@ -199,7 +199,7 @@ MY_MARKER;
       values: fx,
       key: '" . $label . " ',
       color: '#7777ff',
-      area: true      //area - set to true if you want this line to turn into a filled area chart.
+      area: false      //area - set to true if you want this line to turn into a filled area chart.
     }
   ];
 }</script>";
