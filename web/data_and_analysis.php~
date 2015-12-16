@@ -73,7 +73,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "Select * from sales";
+	$query = "Select * from cigar.sales";
 	$title = "Time series";
 	query_and_print_series($query,$title,"Dollars");
 ?>
