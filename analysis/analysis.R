@@ -1,25 +1,26 @@
-#########################################################################################
-### Project 1 # Project 1 # Project 1 # Project 1 # Project 1 # Project 1 # Project 1 ###
-#########################################################################################
+###################################################################################################
+### Project - Group 7
+###################################################################################################
 
-#Due:     04.12.15 
-#Course:  Computing lab / Data warehousing
-#Type:    Project
-#Module:  Recommendation sector 
+# Author:   Felix Gutmann
+#           Max van Esso
+#           Marco Fayet
+# Course:   Computing Lab
+# Due:      11.12.2015
+# Type:     Project
+# Content:  Analysis cigare project
 
-##################      ##################      ##################    ##################
-### 0.Praeamble###      ### 0.Praeamble###      ### 0.Praeamble###    ### 0.Praeamble###
-##################      ##################      ##################    ##################
-
+###################################################################################################
+### 0. Praeamble
+###################################################################################################
 
 ### 0.1 Packages
-
-
 
 library("RMySQL")
 library("forecast")
 library("lars")
 library("recommenderlab")
+library("glmnet")
 
 ### 0.2 Initíalize functions
 
@@ -60,9 +61,27 @@ for( i in 1:length( tab.names ) ){
 
 names(field.names) <- tab.names
 
-##################################################################################
-#Start code # Start # code # Start code # Start code # Start code # Start code ###
-##################################################################################
+###################################################################################################
+#### START CODE # START CODE # START CODE # START CODE # START CODE # START CODE # START CODE #####
+###################################################################################################
+
+###################################################################################################
+### 1. Descriptive 
+################################################################################################### 
+
+# Get total sales per day
+q   <- "SELECT truncate(sum(i.Sales),2) as Sales from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate"
+res <- query(data.base,q,-1)
+n   <- 1:nrow(res)
+o   <- data.frame(cbind(n,res))
+
+# Export results to database
+dbSendQuery(data.base,"DROP TABLE IF EXISTS sales")
+dbWriteTable(conn = data.base, name="sales", value=o, row.names=FALSE)
+
+###################################################################################################
+### 2. Recommandation system
+###################################################################################################  
 
 # Get data from MySQL database
 
@@ -79,13 +98,13 @@ que5 <- "SELECT c.ClientID, SUM(i.Volume) AS TotalVolume FROM invoice_detail i I
 dat2 <- query(data.base,que5,-1)
 
 # Data manipulation
-
 merge.clientID    <- merge( dat1 , dat2 , by.dat1 = "ClientID", by.dat2 = "ClientID" )
 preRank           <- cbind( merge.clientID , ( merge.clientID[,3] / merge.clientID$TotalVolume ) *10 )
 colnames(preRank) <- c("ClientId","Brand","Total Brand Volume","Total Volume","Rank" ) 
 Rank.matrix       <- preRank[,-3:-4]
 rank.table        <- table( Rank.matrix $ClientId , Rank.matrix $Brand )
 ranks             <- as.vector( Rank.matrix [,3] ) 
+
 # Multiplying the ones in the transposed table by the ranks
 trank.table       <- t( rank.table )
 trank.table[as.logical((trank.table))] <- ranks 
@@ -128,14 +147,196 @@ dbSendQuery(data.base,"DROP TABLE IF EXISTS recommendation")
 dbWriteTable(conn = data.base, name="recommendation", value=top, row.names=FALSE)
 
 
-q <- "SELECT truncate(sum(i.Sales),2) as Sales from cigar.invoice I inner join cigar.invoice_detail i on I.InvoiceNumber=i.InvoiceNumber group by I.InvoiceDate"
-res <- query(data.base,q,-1)
-n <- 1:nrow(res)
-o <- data.frame(cbind(n,res))
+###################################################################################################
+### 1. Get data
+###################################################################################################  
 
-dbSendQuery(data.base,"DROP TABLE IF EXISTS sales")
-dbWriteTable(conn = data.base, name="sales", value=o, row.names=FALSE)
+# Get total number of products from mysql database
+n   <- -1
+max <-  as.numeric( query( data.base , "SELECT COUNT(BrandID) FROM product" , n ) )
+
+# Initialize storage list for output
+sales.by.brand <- list()
+
+# Get data from mysql database
+for(i in 1:max){
+  
+  # Query for product i 
+  que      <-  paste0("SELECT ft.InvoiceDate, SUM(st.Sales) AS Sales, st.BrandID
+                      FROM invoice ft 
+                      JOIN invoice_detail st
+                      ON ft.InvoiceNumber=st.InvoiceNumber
+                      WHERE st.BrandID=",i,"
+                      GROUP BY ft.InvoiceDate")
+  # Get data for product i 
+  temp     <-  query(data.base,que,n)
+  # Append to output list
+  sales.by.brand[[i]] <- temp[c(1,2)]
+  # 
+  print(paste0("Get Brand Data:",i))
+}
+
+#Clean up! 
+rm(temp)
+
+#Rename output
+names(sales.by.brand) <- sapply( 1:max , function(i){ paste0( "Brand" , i ) } )
+
+#Create raw data set
+
+n      <- -1
+max    <- query(data.base,"SELECT DISTINCT(InvoiceDate) FROM invoice",n)
 
 
-plot(res$Sales)
+ts.wd                 <- max
+colnames(ts.wd)[1]    <- "InvoiceDate"
 
+#Merge sales data
+for(i in 1:length(sales.by.brand)){
+  
+  #Init. temp sales of one brand 
+  sales.temp <- sales.by.brand[[i]]
+  n.temp     <- nrow(sales.temp)
+  #Adjust indentifier for merge: "InvoiceDate"
+  sales.temp[1] <- sapply( 1:n.temp, function(j){
+    substr( as.matrix( sales.temp[1])[j], 1 , 10 ) 
+  }
+  )
+  #Set column name
+  colnames(sales.temp)[2] <- paste0("sa.br",i)
+  #Merge data
+  ts.wd <- merge( ts.wd, sales.temp , by="InvoiceDate" , all=TRUE )
+  #Update
+  print(paste0("Merge Brand",i))
+}
+
+#Clean up
+rm(sales.temp, n.temp)
+
+#First adjustments / Add total sales as row sums
+ts.wd[is.na(ts.wd)] <- 0
+ts.wd               <- invisible(transform(ts.wd, sum=rowSums(ts.wd[2:ncol(ts.wd)])))
+
+
+### 1.2 Add weekday dummies
+
+# Names
+wd.tot  <- weekdays( as.Date(ts.wd$InvoiceDate) )
+ts.wd   <- data.frame( ts.wd , weekdays = wd.tot )
+wd.uni  <- unique( wd.tot )
+d.names <- c( "mo" , "tu" , "we" , "th" , "fr" , "sa" , "so" )
+
+for( i in 1:7 ){
+  
+  #Create dummy data frame
+  df.temp <- data.frame( weekdays = wd.uni[i] , 1 )
+  #Merge dummy
+  ts.wd   <- merge( ts.wd, df.temp , by= "weekdays" , all = TRUE )
+  #Replace column name
+  colnames(ts.wd)[ncol(ts.wd)] <- d.names[i]
+}
+
+#Clean up!
+rm(df.temp)
+
+### 1.3 Final adjustments
+
+ts.wd               <- ts.wd[ order(ts.wd$InvoiceDate , decreasing = FALSE ),]
+ts.wd[1:2]          <- list(NULL)
+ts.wd[is.na(ts.wd)] <- 0
+
+#Lagged data frame
+
+ts.wdl1 <- ts.wd
+
+drops <- c("sum","InvoiceDate")
+ts.wdl1 <- ts.wdl1[,!(names(ts.wdl1) %in% drops)]
+ts.wdl1 <- ts.wdl1[1:(nrow(ts.wdl1)-1),]
+ts.resp.brand <- ts.wd$sum
+ts.resp.brand <- ts.resp.brand[2:length(ts.resp.brand)]
+
+tsbr.lagged <- as.data.frame(cbind(y=ts.resp.brand,ts.wdl1))
+
+###################################################################################################
+### 2. Analysis
+################################################################################################### 
+
+# 2.1. Define dataset explicitaly
+brand.y 	<- as.matrix(tsbr.lagged$y)
+brand.X 	<- as.matrix(cbind(tsbr.lagged[,2:535],so=tsbr.lagged[,537]))
+
+# 2.2. Training data
+
+X <- brand.X[1:457,]
+y <- brand.y[1:457]
+
+# 2.3. Prediction data
+
+pred.x <- brand.X[457:nrow(brand.X),]
+pred.y <- brand.y[457:length(brand.y)]
+
+# 2.4. Fit models
+
+# OLS - Benchmark
+OLS.fit 	     <- lm(y ~ as.data.frame(tsbr.lagged$y[1:length(as.data.frame(tsbr.lagged$y)-1)]) ) 
+OLS.coef       <- coefficients(OLS.fit)
+OLS.mse        <- MSE(OLS.fit)
+OLS.fitted     <- fitted.values(OLS.fit)
+
+# Lasso regression
+lasso          <- glmnet(X, y, alpha=1)
+lasso.fit 	   <- cv.glmnet(X, y, alpha=1)
+lasso.coef     <- coef(lasso.fit, s = "lambda.min", exact = TRUE)
+lasso.mse 	   <- lasso.fit$cvm[lasso.fit$lambda == lasso.fit$lambda.min]
+
+# Ridge regression
+ridge          <- glmnet(X, y, alpha=0)
+ridge.fit 	   <- cv.glmnet(X, y, alpha=0)
+ridge.coef     <- coef(ridge.fit, s = "lambda.min",exact = TRUE)
+ridge.mse 	   <- ridge.fit$cvm[ridge.fit$lambda == ridge.fit$lambda.min]
+
+# Elastic regression
+elast          <- glmnet(X, y, alpha=0.5)
+elastic.fit    <- cv.glmnet(X, y, alpha=0.5)
+elastic.coef   <- coef(elastic.fit, s = "lambda.min",exact = TRUE)
+elastic.mse    <- elastic.fit$cvm[elastic.fit$lambda == elastic.fit$lambda.min]
+
+# 2.4. Prediction of 2014
+
+OLSpre <- predict(OLS.fit,as.data.frame(pred.x))
+LASpre <- predict(lasso.fit ,  pred.x,  s = "lambda.min")
+RIDpre <- predict(ridge.fit ,  pred.x,  s = "lambda.min")
+ELApre <- predict(elastic.fit, pred.x,  s = "lambda.min")
+
+###################################################################################################
+### 4. Check results
+###################################################################################################
+
+LAMlas <- which(lasso.fit$lambda == lasso.fit$lambda.min)
+DRlass <- lasso.fit$glmnet.fit$dev.ratio[LAMlas]
+
+RIDlas <- which(ridge.fit$lambda == ridge.fit$lambda.min)
+DRridg <- ridge.fit$glmnet.fit$dev.ratio[RIDlas]
+
+ELAlas <- which(elastic.fit$lambda == elastic.fit$lambda.min)
+DRelas <-  elastic.fit$glmnet.fit$dev.ratio[ELAlas]
+
+sum(abs(pred.y - LASpre))
+sum(pred.y - LASpre)
+
+sum(abs(pred.y - ELApre))
+sum(pred.y - ELApre)
+
+###################################################################################################
+### 5. Plot results
+###################################################################################################
+
+n <- 1:length(LASpre)
+predictions <- data.frame(cbind(time=n,sales=pred.y,lasso=as.numeric(LASpre),ridge=as.numeric(RIDpre),elastic=as.numeric(ELApre)))
+
+dbSendQuery(data.base,"DROP TABLE IF EXISTS predictions")
+dbWriteTable(conn = data.base, name="predictions", value=o, row.names=FALSE)
+
+###################################################################################################
+###### END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE ######
+###################################################################################################
