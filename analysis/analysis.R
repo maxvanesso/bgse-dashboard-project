@@ -314,12 +314,6 @@ DRridg <- ridge.fit$glmnet.fit$dev.ratio[RIDlas]
 ELAlas <- which(elastic.fit$lambda == elastic.fit$lambda.min)
 DRelas <-  elastic.fit$glmnet.fit$dev.ratio[ELAlas]
 
-sum(abs(pred.y - LASpre))
-sum(pred.y - LASpre)
-
-sum(abs(pred.y - ELApre))
-sum(pred.y - ELApre)
-
 ###################################################################################################
 ### 5. Plot results
 ###################################################################################################
