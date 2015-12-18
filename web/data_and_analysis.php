@@ -96,19 +96,11 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "Select time,lasso from cigar.predictions";
-	$title = "Time series";
-	query_and_print_series($query,$title,"Dollars");
-?>
-
-<?php
-	// Page body. Write here your queries
-	
-	$query = "Select time,lasso from cigar.predictions";
-	$queryn = "Select time,ridge from cigar.predictions";	
+	$query = "Select time,sales from cigar.predictions";
+	$queryn = "Select time,lasso from cigar.predictions";	
 	$title = "Time series";
 	$titlen = "Time series2";
-	query_and_print_series2($query,$queryn,$title,$titlen,"Lasso","Ridge");
+	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales (in USD)","Predicted sales (Lasso-regression, in USD)");
 ?>
 
 	<p>Below we show the top 20 product recommendation rules identified by the <b>Apriori algorithm</b>. The table can be read as follows: for each rule, the left-hand side shows a potential basket that the customer has put together, while the right-hand side shows the additional product that could be purchased to "complete that basket".</p>

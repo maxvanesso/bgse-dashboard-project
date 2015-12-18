@@ -265,7 +265,7 @@ MY_MARKER;
     $str = $str . PHP_EOL . $id . "Chart();" . PHP_EOL;
     $str = $str . PHP_EOL . "mycharts.push(". $id . "Chart)" . PHP_EOL;
     $str = $str . PHP_EOL . "function " . $id . "Data() { 
-    var fx = [];";
+    var fx = [];
     var fxn = [];";
   
     while ($row = mysql_fetch_array($result)) {
@@ -288,7 +288,7 @@ MY_MARKER;
     {
       values: fxn,
       key: '" . $labeln . " ',
-      color: '#0e695a',
+      color: '#9e9e9e',
       area: false      //area - set to true if you want this line to turn into a filled area chart.
     }
   ];

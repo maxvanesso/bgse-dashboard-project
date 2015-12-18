@@ -241,11 +241,11 @@ function query_and_print_series2($query,$queryn, $title, $titlen,$label, $labeln
     ;
 
     chart.xAxis     //Chart x-axis settings
-      .axisLabel('X')
+      .axisLabel('Days (2014)')
       .tickFormat(d3.format(',r'));
 
     chart.yAxis     //Chart y-axis settings
-      .axisLabel('Y')
+      .axisLabel('')
       .tickFormat(d3.format('.02f'));
 
 MY_MARKER;
@@ -288,7 +288,7 @@ MY_MARKER;
     {
       values: fxn,
       key: '" . $labeln . " ',
-      color: '#0e695a',
+      color: '#9e9e9e',
       area: false      //area - set to true if you want this line to turn into a filled area chart.
     }
   ];
