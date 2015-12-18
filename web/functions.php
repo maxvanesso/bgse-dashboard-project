@@ -265,7 +265,7 @@ MY_MARKER;
     $str = $str . PHP_EOL . $id . "Chart();" . PHP_EOL;
     $str = $str . PHP_EOL . "mycharts.push(". $id . "Chart)" . PHP_EOL;
     $str = $str . PHP_EOL . "function " . $id . "Data() { 
-    var fx = [];";
+    var fx = [];
     var fxn = [];";
   
     while ($row = mysql_fetch_array($result)) {
