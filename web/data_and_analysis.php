@@ -13,7 +13,7 @@
 	
 	<h2>Data</h2>
 	
-	<p>We carried out an analysis of past transactions, with the objective of gathering information on the types of products that generate the highest revenues as well as extracting information on the customer base. The results displayed in this page provide valuable insights to teams in sales and marketing aiming to refine their strategy.</p>
+<p>We carried out an analysis of past transactions, with the objective of gathering information on the types of products that generate the highest revenues as well as extracting information on the customer base. The results displayed in this page provide valuable insights to teams in sales and marketing aiming to refine their strategy.</p>
 	
 <?php
    // Total Revenue by product
@@ -85,8 +85,15 @@
 	</div>
 	<div id="analysis" style="display: none">
 	<h2>Analysis</h2>
-	
+	<h3>Recommendation system</h3>
+
 <p>The recommendation system we used works via a User-Based Collaborative Filtering System (UBCF), which we modeled below.</p>
+
+	<div>	<center><img src="recomsystem.png" style="width: 80%"></img></center></div>
+	
+<p>We started by building ratings for each customer based on their purchase history and implied preferences. The more a customer bought a specific brand in comparison to the others, the higher the rating will be (with 10 being the highest score). In order to then predict what brands a specific customer (here in red) will like, we then used the ratings from customers with similar purchasing profiles - referred to as "nearest neighbours". The last step is to compute predicted ratings using the nearest neighbours' actual ratings. </p>
+
+<p>As an output example, we display the top recommendation for five different customers identified by their Client /ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
 
 <?php
 	// Most sold product pairs
@@ -97,10 +104,9 @@
 	echo "";
 ?>
 
-<p>We started by building ratings for each customer based on their purchase history and implied preferences. The more a customer bought a specific brand in comparison to the others, the higher the rating will be (with 10 being the highest score). In order to then predict what brands a specific customer (here in red) will like, we then used the ratings from customers with similar purchasing profiles - referred to as "nearest neighbours". The last step is to compute predicted ratings using the nearest neighbours' actual ratings. </p>
+<h3>Sales prediction</h3>
 
-<p>As an output example, we display the top recommendation for five different customers identified by their Client /ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
-
+	<div>	<center><img src="Tree.png" style="width: 80%"></img></center></div>	
 
 <p>In order to build a sales prediction model we decided to use a Least Absolute Shrinkage and Selection Operator, also referred to as LASSO regression. We thought this technique to be appropriate because of the high number of brands (over 500) and associated high sparsity levels appearing in our dataset. Using a LASSO regression allows for some "shrinkage" effect on brands which carry less relative explanatory power.</p>
 
@@ -115,9 +121,9 @@
 	
 	$query = "Select time , sales from cigar.predictions";
 	$queryn = "Select time,lasso from cigar.predictions";	
-	$title = "Prediction of sales";
+	$title = "Prediction of sales (01/01/2014 - 30/06/2014, in USD)";
 	$titlen = "";
-	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales (in USD)","Predicted sales (Lasso-regression, in USD)");
+	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales","Predicted sales (Technique: Lasso-regression)");
 ?>
 
 <p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 12.6%, compared to 25% for the Ordinary Least Square baseline model.</p>
@@ -134,9 +140,6 @@
 	query_and_print_table($query,$title);
 	echo "";
 ?>
-
-
-
 
 		</div>
 <?php
