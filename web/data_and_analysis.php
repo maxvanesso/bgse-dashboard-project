@@ -70,11 +70,13 @@
 
 	<p>Such information could lead to targeted ad campaigns from the marketing department. Of additional interest could be a further analytical break down of the clusters of customers to better understand consumption drivers. Florida for example has a big customer base because of a large population of retirees, typically more fond of cigars than the rest of the population.</p>
 	
+<p>One of the most compact way of representing the 15 million entries in our dataset is through a time series. The following graph shows aggregate sales for the end of the year 2012, the whole of 2013, and the first half of 2014. The three "humps" represent a seasonal high that takes place during summer, reflecting customers' preferences for outdoors smoking. The highest peak is in december 2014, most likelue due to pre-Christmas purchases. In the Analysis section of our dashboard, we use this time series to build a predictive sales model via LASSO.</p>
+
 <?php
 	// Page body. Write here your queries
 	
 	$query = "Select * from cigar.sales";
-	$title = "Time series";
+	$title = "Aggregated sales per day (01/10/2012 - 30/06/14, in USD)";
 	query_and_print_series($query,$title,"Dollars");
 ?>
 	<p> In the next tab, we take this analysis further by implementing a product recommendation system and by looking at customers marginal contribution to revenues using a LASSO regression.</p>
@@ -84,6 +86,8 @@
 	<div id="analysis" style="display: none">
 	<h2>Analysis</h2>
 	
+<p>The recommendation system we used works via a User-Based Collaborative Filtering System (UBCF), which we modeled below.</p>
+
 <?php
 	// Most sold product pairs
 	
@@ -93,6 +97,31 @@
 	echo "";
 ?>
 
+<p>We started by building ratings for each customer based on their purchase history and implied preferences. The more a customer bought a specific brand in comparison to the others, the higher the rating will be (with 10 being the highest score). In order to then predict what brands a specific customer (here in red) will like, we then used the ratings from customers with similar purchasing profiles - referred to as "nearest neighbours". The last step is to compute predicted ratings using the nearest neighbours' actual ratings. </p>
+
+<p>As an output example, we display the top recommendation for five different customers identified by their Client /ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
+
+
+<p>In order to build a sales prediction model we decided to use a Least Absolute Shrinkage and Selection Operator, also referred to as LASSO regression. We thought this technique to be appropriate because of the high number of brands (over 500) and associated high sparsity levels appearing in our dataset. Using a LASSO regression allows for some "shrinkage" effect on brands which carry less relative explanatory power.</p>
+
+<p>We used data from 2012 and 2013 to train our model and carried out predictions for the first half of the year 2014 to check for accuracy. The following plot shows the obtained results : the actual observed sales appear in blue and our predictions in grey.</p>
+
+<p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 12.6%, compared to 25% for the Ordinary Least Square baseline model.</p>
+
+<p>Overall, this predictive tool can be used at by the higher echelons of the company's management team in order to gain visibility on future sales and operations.</p>
+
+<?php
+	// Page body. Write here your queries
+	
+	$query = "Select time , sales from cigar.predictions";
+	$queryn = "Select time,lasso from cigar.predictions";	
+	$title = "Prediction of sales";
+	$titlen = "";
+	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales (in USD)","Predicted sales (Lasso-regression, in USD)");
+?>
+
+<p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 12.6%, compared to 25% for the Ordinary Least Square baseline model.</p>
+	
 <?php
 	// Most sold product pairs
 	
@@ -106,32 +135,6 @@
 	echo "";
 ?>
 
-
-<?php
-	// Page body. Write here your queries
-	
-	$query = "Select time , sales from cigar.predictions";
-	$queryn = "Select time,lasso from cigar.predictions";	
-	$title = "Prediction of sales";
-	$titlen = "";
-	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales (in USD)","Predicted sales (Lasso-regression, in USD)");
-?>
-
-	<p>Below we show the top 20 product recommendation rules identified by the <b>Apriori algorithm</b>. The table can be read as follows: for each rule, the left-hand side shows a potential basket that the customer has put together, while the right-hand side shows the additional product that could be purchased to "complete that basket".</p>
-
-	<p>For example, the first rule indicates that a customer that has already added dried applies and sild (herring) to her basket, would be recommended gorgonzola cheese <em>(note: it sounds disgusting but the customer is always right!)</em> The recommendations are based on the analysis of historical transaction already stored in the database.</p>
-
-	<p>We build a log-log linear regression model of the revenues per product using the quantity purchased by the different customers as explanatory factors. We consider each different product as a new observation of the revenue generated. Other explanatory factors have been considered such as the price of the product, the quantity per product, the average expenses, or the mean product price. However, the quantity of each product purchased by the different customers gave the best interpretability of the results and provides the best matching to the recommendation system. Since most of the customers only bought a small fraction of the products our data matrix is sparse. We use the Lasso regression since it is optimal for sparse data, but also because it allows us to focus on the most relevant customers.</p>
-
-	<p>The table below shows the coefficients of the LASSO Regression. We have used the results of this regression to rank customers according to their <b>percentage monetary contribution</b> to total revenues from buying an additional 1% of products. We believe that this analysis would help the sales team in two aspects:</p>
-
-		<ul style="list-style-type:circle">
-
-  			<li> Identify the most promising customers for their marketing activities to target. The customers with larger percentage monetary contribution are the most susceptible to increase their expenses either by increasing the quantity of the products they usually have in the basket or by purchasing products they have not tried yet. <a href="http://80y.mjt.lu/nl/80y/s6gjl.html#" target="_blank">(...and they may be amenable to suggestions like these...)</a></li>
-
-			<li> Relax the potentially over-estimation of certain clients. For example, the client SAVEA is the client that generated more revenue for the firm <em>(see plot "Customers by Revenue")</em> up to now. However, according to the results of the LASSO analysis, it is not the client that will increase the most the firm's marginal revenue when buying "an average product". We strongly suggest doing this exercise (the LASSO Regression) before every new marketing campaign, to update the ranking of the "most interesting revenue generating customers"</li>
-		
-		</ul>
 
 
 

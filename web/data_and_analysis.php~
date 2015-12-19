@@ -88,7 +88,7 @@
 	// Most sold product pairs
 	
 	$query = "SELECT ClientID, Brand AS TopBrand, Recommendations as Recommendation from cigar.recommendation";
-	$title = "Recommendation for top 5 clinet";
+	$title = "Recommendation for top 5 clients";
 	query_and_print_table($query,$title);
 	echo "";
 ?>
@@ -96,7 +96,11 @@
 <?php
 	// Most sold product pairs
 	
-	$query = "SELECT TRUNCATE(Lasso,2), TRUNCATE(Ridge,2),TRUNCATE(ElasticNet,2),TRUNCATE(OLS,2) FROM cigar.accuracy";
+	$query = "SELECT TRUNCATE(Lasso,2) AS Lasso, 
+			 TRUNCATE(Ridge,2) AS Ridge,
+			 TRUNCATE(ElasticNet,2) AS ElasticNET,
+			 TRUNCATE(OLS,2) AS OLS 
+			 FROM cigar.accuracy";
 	$title = "Mean absolute percentage error for fitted models";
 	query_and_print_table($query,$title);
 	echo "";
@@ -106,7 +110,7 @@
 <?php
 	// Page body. Write here your queries
 	
-	$query = "Select time,sales from cigar.predictions";
+	$query = "Select time , sales from cigar.predictions";
 	$queryn = "Select time,lasso from cigar.predictions";	
 	$title = "Prediction of sales";
 	$titlen = "";

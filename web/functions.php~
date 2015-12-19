@@ -48,7 +48,7 @@ function query_and_print_table($query,$title) {
     // One of the mysql result functions must be used
     // See also mysql_result(), mysql_fetch_array(), mysql_fetch_row(), etc.
     echo "<h2>" . $title . "</h2>";
-    echo "<table align='center'>";
+    echo "<table align='left'>";
     echo "<thead><tr></tr>";
     $row = mysql_fetch_assoc($result);
     foreach ($row as $col => $value) {                
