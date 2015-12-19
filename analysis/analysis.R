@@ -325,5 +325,19 @@ dbSendQuery(data.base,"DROP TABLE IF EXISTS predictions")
 dbWriteTable(conn = data.base, name="predictions", value=predictions, row.names=FALSE)
 
 ###################################################################################################
+### 5. Test
+###################################################################################################
+
+t <-ts(LASpre,start=1,end=181,frequency = 1)
+
+a <- accuracy(t,pred.y)
+b <- accuracy(t,pred.y)
+e <- rbind(cbind(DRlass,DRridg),cbind(a[5],b[5]))
+colnames(e) <- c("Lasso","Ridge")
+rownames(e) <- c("Deviance","MAPE")
+
+dbSendQuery(data.base,"DROP TABLE IF EXISTS ef")
+dbWriteTable(conn = data.base, name="ef", value=as.data.frame(e), row.names=TRUE)
+###################################################################################################
 ###### END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE ######
 ###################################################################################################

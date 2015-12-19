@@ -94,12 +94,22 @@
 ?>
 
 <?php
+	// Most sold product pairs
+	
+	$query = "SELECT * from cigar.ef";
+	$title = "Results";
+	query_and_print_table($query,$title);
+	echo "";
+?>
+
+
+<?php
 	// Page body. Write here your queries
 	
 	$query = "Select time,sales from cigar.predictions";
 	$queryn = "Select time,lasso from cigar.predictions";	
-	$title = "Time series";
-	$titlen = "Time series2";
+	$title = "Prediction of sales";
+	$titlen = "";
 	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales (in USD)","Predicted sales (Lasso-regression, in USD)");
 ?>
 
