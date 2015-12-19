@@ -116,7 +116,7 @@ body {
     position:relative;
     bottom:0px;  
     font-size: 100%;
-    color:#e7510f;
+    color:#16365C;
     text-align: center;
     font-weight: bold;
     padding: 5px;
@@ -141,13 +141,13 @@ h1 {
 }
 h2 {
 	font: 1.5em Arial, Verdana, sans-serif;
-	color:  #e7510f;
+	color:  #16365C;
 	padding: 0;
 	margin: 5px;
 }
 h3 {
 	font: 1.3em Arial, Verdana, sans-serif;
-	color:  #e7510f;
+	color:  #632523;
 }
 h4 {
 	font: 1em Arial, Verdana, sans-serif;

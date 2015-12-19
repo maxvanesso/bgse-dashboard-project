@@ -77,7 +77,7 @@
 	
 	$query = "Select * from cigar.sales";
 	$title = "Aggregated sales per day (01/10/2012 - 30/06/14, in USD)";
-	query_and_print_series($query,$title,"Dollars");
+	query_and_print_series($query,$title,"Daily sales");
 ?>
 	<p> In the next tab, we take this analysis further by implementing a product recommendation system and by looking at customers marginal contribution to revenues using a LASSO regression.</p>
 
@@ -96,7 +96,7 @@
 <p>As an output example, we display the top recommendation for five different customers identified by their Client /ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
 
 <?php
-	// Most sold product pairs
+	// Recommendation
 	
 	$query = "SELECT ClientID, Brand AS TopBrand, Recommendations as Recommendation from cigar.recommendation";
 	$title = "Recommendation for top 5 clients";
@@ -106,15 +106,13 @@
 
 <h3>Sales prediction</h3>
 
+<p>The products in our database fit a hierarchical structure wherein each brand of cigar belongs to a brand family which itself belongs to a manufacturer and so on. When it came to predicting sales, we thus had the choice between the categories displayed below. One challenge to overcome was the amount sparsity associated with the inputs.</p>
+
 	<div>	<center><img src="Tree.png" style="width: 80%"></img></center></div>	
 
-<p>In order to build a sales prediction model we decided to use a Least Absolute Shrinkage and Selection Operator, also referred to as LASSO regression. We thought this technique to be appropriate because of the high number of brands (over 500) and associated high sparsity levels appearing in our dataset. Using a LASSO regression allows for some "shrinkage" effect on brands which carry less relative explanatory power.</p>
+<p>In order to build a good sales prediction model, we fitted three different models using the following techniques: Ridge Regression, Elastic Net and LASSO. The latter displayed the best fit, and provided an ideal framework by allowing for some "shrinkage" effect on brands which carry relatively less explanatory power with the sales predictions.</p>
 
-<p>We used data from 2012 and 2013 to train our model and carried out predictions for the first half of the year 2014 to check for accuracy. The following plot shows the obtained results : the actual observed sales appear in blue and our predictions in grey.</p>
-
-<p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 12.6%, compared to 25% for the Ordinary Least Square baseline model.</p>
-
-<p>Overall, this predictive tool can be used at by the higher echelons of the company's management team in order to gain visibility on future sales and operations.</p>
+<p>We used data from 2012 and 2013 to train our model and carried out predictions for the first half of the year 2014 to check for accuracy. The following plot shows the obtained results, with the actual observed sales appearing in blue and our predictions in grey.</p>
 
 <?php
 	// Page body. Write here your queries
@@ -127,9 +125,11 @@
 ?>
 
 <p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 12.6%, compared to 25% for the Ordinary Least Square baseline model.</p>
-	
+
+<p>Overall, this predictive tool can be used at by the higher echelons of the company's management team in order to gain visibility on future sales and operations.</p>
+
 <?php
-	// Most sold product pairs
+	// MAPE
 	
 	$query = "SELECT TRUNCATE(Lasso,2) AS Lasso, 
 			 TRUNCATE(Ridge,2) AS Ridge,
