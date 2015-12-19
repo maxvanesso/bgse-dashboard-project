@@ -94,6 +94,16 @@
 ?>
 
 <?php
+	// Most sold product pairs
+	
+	$query = "SELECT * from cigar.ef";
+	$title = "Results";
+	query_and_print_table($query,$title);
+	echo "";
+?>
+
+
+<?php
 	// Page body. Write here your queries
 	
 	$query = "Select time,sales from cigar.predictions";

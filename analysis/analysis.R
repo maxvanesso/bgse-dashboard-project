@@ -36,7 +36,6 @@ library("glmnet")
 
   ### Conditional summary
   inf.by <- function(cond,sumvar,fun){
-
       con <- unique(cond)
       out <- invisible(sapply(con, function(i){
         pos <- which(cond==i)
@@ -83,7 +82,7 @@ dbWriteTable(conn = data.base, name="sales", value=o, row.names=FALSE)
 ### 2. Recommandation system
 ###################################################################################################  
 
-# Get data from MySQL database
+# 2.1. Get data from MySQL database
 
 que4 <- "SELECT p.Brand, SUM(i.Volume), c.ClientID FROM product p INNER JOIN invoice_detail i
          ON p.BrandID=i.BrandID INNER JOIN invoice I ON i.InvoiceNumber=I.InvoiceNumber
@@ -97,7 +96,7 @@ que5 <- "SELECT c.ClientID, SUM(i.Volume) AS TotalVolume FROM invoice_detail i I
 
 dat2 <- query(data.base,que5,-1)
 
-# Data manipulation
+# 2.2. Data manipulation
 merge.clientID    <- merge( dat1 , dat2 , by.dat1 = "ClientID", by.dat2 = "ClientID" )
 preRank           <- cbind( merge.clientID , ( merge.clientID[,3] / merge.clientID$TotalVolume ) *10 )
 colnames(preRank) <- c("ClientId","Brand","Total Brand Volume","Total Volume","Rank" ) 
@@ -105,28 +104,28 @@ Rank.matrix       <- preRank[,-3:-4]
 rank.table        <- table( Rank.matrix $ClientId , Rank.matrix $Brand )
 ranks             <- as.vector( Rank.matrix [,3] ) 
 
-# Multiplying the ones in the transposed table by the ranks
+# 2.3. Multiplying the ones in the transposed table by the ranks
 trank.table       <- t( rank.table )
 trank.table[as.logical((trank.table))] <- ranks 
 
-# Re-transposing it to have the rank matrix
+# 2.4. Re-transposing it to have the rank matrix
 finalrank.table   <- t(trank.table) 
 finalrank.matrix  <- as.data.frame.matrix(finalrank.table)
 finalrank.matrix2 <- as.matrix(finalrank.matrix)
 
-# Final adjustments - Replace zero by NA
+# 2.5. Final adjustments - Replace zero by NA
 finalrank.matrix2[finalrank.matrix2==0] <- NA
 
-# Create Affinity matrix
+# 2.6. Create Affinity matrix
 affinity.matrix   <- as(finalrank.matrix2, "realRatingMatrix")
 
-# Train recommedation model
+# 2.7. Train recommedation model
 Rec.model <- Recommender(affinity.matrix[1:4999],
                          method = "UBCF", 
                          param=list(normalize = "Z-score", method = "Jaccard" , nn = 5, minRating = 0 )
                         )
 
-# Estimate items for top clients
+# 2.8. Estimate items for top clients
 
 que6 <- "select c.ClientID, sum(i.Volume) as TotalVolume, p.Brand from product p inner join invoice_detail i
          on p.BrandID=i.BrandID inner join invoice I on i.InvoiceNumber=I.InvoiceNumber
@@ -135,20 +134,20 @@ que6 <- "select c.ClientID, sum(i.Volume) as TotalVolume, p.Brand from product p
 top <- query(data.base,que6,-1)
 
 rec <- c()
-id <- top$ClientID
+id  <- top$ClientID
+
 for(i in 1:nrow(top)){
   rec[i] <- unlist(as(predict(Rec.model, affinity.matrix[as.character(top$ClientID[i])], n=1),"list"))  
 }
 
 top <- cbind(top,Recommendations=rec)
 
-#Exporting SQL table
+# 2.9. Exporting SQL table
 dbSendQuery(data.base,"DROP TABLE IF EXISTS recommendation")
 dbWriteTable(conn = data.base, name="recommendation", value=top, row.names=FALSE)
 
-
 ###################################################################################################
-### 1. Get data
+### Prediction of sales - Brand level - Data preparation
 ###################################################################################################  
 
 # Get total number of products from mysql database
@@ -258,7 +257,7 @@ ts.resp.brand <- ts.resp.brand[2:length(ts.resp.brand)]
 tsbr.lagged <- as.data.frame(cbind(y=ts.resp.brand,ts.wdl1))
 
 ###################################################################################################
-### 2. Analysis
+### Analysis
 ################################################################################################### 
 
 # 2.1. Define dataset explicitaly
@@ -302,42 +301,58 @@ RIDpre <- predict(ridge.fit ,  pred.x,  s = "lambda.min")
 ELApre <- predict(elastic.fit, pred.x,  s = "lambda.min")
 
 ###################################################################################################
-### 4. Check results
+### Benchmark model
 ###################################################################################################
 
-LAMlas <- which(lasso.fit$lambda == lasso.fit$lambda.min)
-DRlass <- lasso.fit$glmnet.fit$dev.ratio[LAMlas]
+benchmark <- ts.wd$sum
 
-RIDlas <- which(ridge.fit$lambda == ridge.fit$lambda.min)
-DRridg <- ridge.fit$glmnet.fit$dev.ratio[RIDlas]
+y <- benchmark[2:length(benchmark)]
+x <- benchmark[1:length(benchmark)-1]
 
-ELAlas <- which(elastic.fit$lambda == elastic.fit$lambda.min)
-DRelas <-  elastic.fit$glmnet.fit$dev.ratio[ELAlas]
+# Training and prediction data 
+x.training <- x[1:457]
+y.training <- y[1:457]
+x.pred     <- x[457:length(x)]
+# Fit model 
+m01 <- lm(y.training ~ x.training)
+
+# Prediction 
+OLSpre <- m01$coefficients[1] + x.pred * m01$coefficients[2]
 
 ###################################################################################################
-### 5. Plot results
+### 5.Export predictions
 ###################################################################################################
 
 n <- 1:length(LASpre)
-predictions <- data.frame(cbind(time=n,sales=pred.y,lasso=as.numeric(LASpre),ridge=as.numeric(RIDpre),elastic=as.numeric(ELApre)))
+predictions <- data.frame(cbind(time=n,sales=pred.y,OLS=as.numeric(OLSpre),lasso=as.numeric(LASpre),ridge=as.numeric(RIDpre),elastic=as.numeric(ELApre)))
 
 dbSendQuery(data.base,"DROP TABLE IF EXISTS predictions")
 dbWriteTable(conn = data.base, name="predictions", value=predictions, row.names=FALSE)
 
 ###################################################################################################
-### 5. Plot results
+### 6. Check accurracy
 ###################################################################################################
 
-t <-ts(LASpre,start=1,end=181,frequency = 1)
+tLAS <-ts(LASpre,start=1,end=181,frequency = 1)
+tRID <-ts(RIDpre,start=1,end=181,frequency = 1)
+tELA <-ts(ELApre,start=1,end=181,frequency = 1)
+tOLS <-ts(OLSpre,start=1,end=181,frequency = 1)
 
-a <- accuracy(t,pred.y)
-b <- accuracy(t,pred.y)
-e <- rbind(cbind(DRlass,DRridg),cbind(a[5],b[5]))
-colnames(e) <- c("Lasso","Ridge")
-rownames(e) <- c("Deviance","MAPE")
+LASac <- accuracy(tLAS,pred.y)
+RIDac <- accuracy(tRID,pred.y)
+ELAac <- accuracy(tELA,pred.y)
+OLSac <- accuracy(tOLS,pred.y)
 
-dbSendQuery(data.base,"DROP TABLE IF EXISTS ef")
-dbWriteTable(conn = data.base, name="ef", value=as.data.frame(e), row.names=TRUE)
+accur <- as.data.frame(cbind(LASac[5],RIDac[5],ELAac[5],OLSac[5]))
+colnames(accur) <- c("Lasso","Ridge","ElasticNet","OLS")
+
+###################################################################################################
+### 6. Export accurracy
+###################################################################################################
+
+dbSendQuery(data.base,"DROP TABLE IF EXISTS accuracy")
+dbWriteTable(conn = data.base, name="accuracy", value=accur, row.names=FALSE)
+
 ###################################################################################################
 ###### END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE # END CODE ######
 ###################################################################################################
