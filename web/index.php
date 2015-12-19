@@ -81,7 +81,8 @@ function show_content(optionsId) {
 					<li> First, we sought to provide insights as to what was actually going on in the dataset. What are the most sold brands? Where are customers located? Displaying the right kind of information is at the heart of business intelligence. This is the descriptive part which is covered in the Data Section of our dashboard.</li>
 					<li> Second, we decided to produce inferential statistics in an attempt to boost future sales and revenue. The two products we designed are a recommender system, based on the purchase history of clients, and a time series analysis used to predict sales. These results can be found in the Analysis Section of our Dashboard.</li>
 				</ul>
-		<div>	<center><img src="recomsystem.png" style="width: 80%"></img></center></div>				
+		<div>	<center><img src="recomsystem.png" style="width: 80%"></img></center></div>
+		<div>	<center><img src="Tree.png" style="width: 80%"></img></center></div>						
 		</div>	
 
                 <?php include 'data_and_analysis.php' ?>
