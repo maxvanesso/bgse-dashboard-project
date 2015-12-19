@@ -103,7 +103,7 @@ function query_and_print_graph($query,$title,$ylabel) {
           .showValues(true)       //...instead, show the bar value right on top of each bar.
           .transitionDuration(350);
 MY_MARKER;
-    $str = $str . PHP_EOL . 'chart.yAxis.axisLabel("' . $ylabel . '").axisLabelDistance(30)';
+    $str = $str . PHP_EOL . 'chart.yAxis.axisLabel("").axisLabelDistance(30)';
     $str = $str . PHP_EOL . "d3.select('#" . $id . " svg')
           .datum(" . $id . "Data())
           .call(chart);";
