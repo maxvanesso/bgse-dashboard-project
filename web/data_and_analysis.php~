@@ -87,8 +87,8 @@
 <?php
 	// Most sold product pairs
 	
-	$query = "SELECT * from cigar.recommendation";
-	$title = "REcom";
+	$query = "SELECT ClientID, Brand AS TopBrand, Recommendations as Recommendation from cigar.recommendation";
+	$title = "ReRecommendation for top 5 clinet";
 	query_and_print_table($query,$title);
 	echo "";
 ?>
@@ -96,8 +96,8 @@
 <?php
 	// Most sold product pairs
 	
-	$query = "SELECT * from cigar.ef";
-	$title = "Results";
+	$query = "SELECT * from cigar.accuracy";
+	$title = "Mean absolute percentage error for fitted models";
 	query_and_print_table($query,$title);
 	echo "";
 ?>

@@ -96,7 +96,7 @@
 <?php
 	// Most sold product pairs
 	
-	$query = "SELECT * from cigar.accuracy";
+	$query = "SELECT TRUNCATE(Lasso,2), TRUNCATE(Ridge,2),TRUNCATE(ElasticNet,2),TRUNCATE(OLS,2) FROM cigar.accuracy";
 	$title = "Mean absolute percentage error for fitted models";
 	query_and_print_table($query,$title);
 	echo "";
