@@ -108,7 +108,7 @@ map 		     <- invisible(get_map(location = "united states", zoom = 3, maptype = 
 #get a map of USA from google source
 map.final    <- ggmap(map) +
   geom_point(aes(x = longitude, y = latitude, size = map_matrix1$`Frequency of States`),
-             data = map_matrix1, colour=pers.blue, alpha=0.7, highres = TRUE) + theme_nothing()
+             data = map_matrix1, colour=pers.blue, alpha=0.7) + theme_nothing()
 
 ###################################################################################################
 ### Recommandation system
