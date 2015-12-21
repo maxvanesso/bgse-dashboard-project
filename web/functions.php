@@ -171,7 +171,7 @@ function query_and_print_series($query,$title,$label) {
 
 MY_MARKER;
 
-    $str = $str . PHP_EOL . 'chart.yAxis.axisLabel("x").axisLabelDistance(30)';
+    $str = $str . PHP_EOL . 'chart.yAxis.axisLabel("").axisLabelDistance(30)';
     $str = $str . PHP_EOL . "d3.select('#" . $id . " svg')
           .datum(" . $id . "Data())
           .call(chart);";

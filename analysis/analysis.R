@@ -2,20 +2,19 @@
 ### Project - Group 7
 ###################################################################################################
 
-# Author:   Felix Gutmann
-#           Max van Esso
-#           Marco Fayet
-# Course:   Computing Lab
-# Due:      11.12.2015
-# Type:     Project
-# Content:  Analysis cigare project
+# Author:       Felix Gutmann
+#               Max van Esso
+#               Marco Fayet
+# Course:       Computing Lab / Data Warehousing
+# Last update:  21.12.2015
+# Type:         Dashboard project
+# Content:      Analysis cigare project
 
 ###################################################################################################
 ### 0. Praeamble
 ###################################################################################################
 
-### 0.1 Packages
-
+### 0.1 Load packages
 library("RMySQL")
 library("forecast")
 library("lars")
@@ -65,7 +64,7 @@ names(field.names) <- tab.names
 ###################################################################################################
 
 ###################################################################################################
-### 1. Descriptive 
+### Descriptive - Prepare total sales
 ################################################################################################### 
 
 # Get total sales per day
@@ -79,10 +78,10 @@ dbSendQuery(data.base,"DROP TABLE IF EXISTS sales")
 dbWriteTable(conn = data.base, name="sales", value=o, row.names=FALSE)
 
 ###################################################################################################
-### 2. Recommandation system
+### Recommandation system
 ###################################################################################################  
 
-# 2.1. Get data from MySQL database
+# Get data from MySQL database
 
 que4 <- "SELECT p.Brand, SUM(i.Volume), c.ClientID FROM product p INNER JOIN invoice_detail i
          ON p.BrandID=i.BrandID INNER JOIN invoice I ON i.InvoiceNumber=I.InvoiceNumber
@@ -96,43 +95,35 @@ que5 <- "SELECT c.ClientID, SUM(i.Volume) AS TotalVolume FROM invoice_detail i I
 
 dat2 <- query(data.base,que5,-1)
 
-# 2.2. Data manipulation
+# Data preparation
 merge.clientID    <- merge( dat1 , dat2 , by.dat1 = "ClientID", by.dat2 = "ClientID" )
 preRank           <- cbind( merge.clientID , ( merge.clientID[,3] / merge.clientID$TotalVolume ) *10 )
 colnames(preRank) <- c("ClientId","Brand","Total Brand Volume","Total Volume","Rank" ) 
 Rank.matrix       <- preRank[,-3:-4]
 rank.table        <- table( Rank.matrix $ClientId , Rank.matrix $Brand )
 ranks             <- as.vector( Rank.matrix [,3] ) 
-
-# 2.3. Multiplying the ones in the transposed table by the ranks
 trank.table       <- t( rank.table )
 trank.table[as.logical((trank.table))] <- ranks 
-
-# 2.4. Re-transposing it to have the rank matrix
 finalrank.table   <- t(trank.table) 
 finalrank.matrix  <- as.data.frame.matrix(finalrank.table)
 finalrank.matrix2 <- as.matrix(finalrank.matrix)
-
-# 2.5. Final adjustments - Replace zero by NA
 finalrank.matrix2[finalrank.matrix2==0] <- NA
 
-# 2.6. Create Affinity matrix
+# Create Affinity matrix
 affinity.matrix   <- as(finalrank.matrix2, "realRatingMatrix")
 
-# 2.7. Train recommedation model
+# Train recommedation model
 Rec.model <- Recommender(affinity.matrix[1:4999],
                          method = "UBCF", 
                          param=list(normalize = "Z-score", method = "Jaccard" , nn = 5, minRating = 0 )
                         )
 
-# 2.8. Estimate items for top clients
-
+# Get data - Estimate items for top clients based on total volume
 que6 <- "select c.ClientID, sum(i.Volume) as TotalVolume, p.Brand from product p inner join invoice_detail i
          on p.BrandID=i.BrandID inner join invoice I on i.InvoiceNumber=I.InvoiceNumber
          inner join client c on I.ClientID=c.ClientID group by ClientID, Brand order by TotalVolume desc limit 5"
 
 top <- query(data.base,que6,-1)
-
 rec <- c()
 id  <- top$ClientID
 
@@ -140,9 +131,10 @@ for(i in 1:nrow(top)){
   rec[i] <- unlist(as(predict(Rec.model, affinity.matrix[as.character(top$ClientID[i])], n=1),"list"))  
 }
 
+# Define data frame for output
 top <- cbind(top,Recommendations=rec)
 
-# 2.9. Exporting SQL table
+# Export results to MySQL database
 dbSendQuery(data.base,"DROP TABLE IF EXISTS recommendation")
 dbWriteTable(conn = data.base, name="recommendation", value=top, row.names=FALSE)
 
@@ -173,6 +165,7 @@ for(i in 1:max){
   sales.by.brand[[i]] <- temp[c(1,2)]
   # 
   print(paste0("Get Brand Data:",i))
+
 }
 
 #Clean up! 
@@ -257,44 +250,42 @@ ts.resp.brand <- ts.resp.brand[2:length(ts.resp.brand)]
 tsbr.lagged <- as.data.frame(cbind(y=ts.resp.brand,ts.wdl1))
 
 ###################################################################################################
-### Analysis
+### Prediction of sales - Brand Level
 ################################################################################################### 
 
-# 2.1. Define dataset explicitaly
+# Define dataset explicitaly
 brand.y 	<- as.matrix(tsbr.lagged$y)
 brand.X 	<- as.matrix(cbind(tsbr.lagged[,2:535],so=tsbr.lagged[,537]))
 
-# 2.2. Training data
-
+# Training data
 X <- brand.X[1:457,]
 y <- brand.y[1:457]
 
-# 2.3. Prediction data
+# Prediction data
+pred.x <- brand.X[458:nrow(brand.X),]
+pred.y <- brand.y[458:length(brand.y)]
 
-pred.x <- brand.X[457:nrow(brand.X),]
-pred.y <- brand.y[457:length(brand.y)]
+# Fit models
 
-# 2.4. Fit models
+  # Lasso regression
+  lasso          <- glmnet(X, y, alpha=1)
+  lasso.fit 	   <- cv.glmnet(X, y, alpha=1)
+  lasso.coef     <- coef(lasso.fit, s = "lambda.min", exact = TRUE)
+  lasso.mse 	   <- lasso.fit$cvm[lasso.fit$lambda == lasso.fit$lambda.min]
+  
+  # Ridge regression
+  ridge          <- glmnet(X, y, alpha=0)
+  ridge.fit 	   <- cv.glmnet(X, y, alpha=0)
+  ridge.coef     <- coef(ridge.fit, s = "lambda.min",exact = TRUE)
+  ridge.mse 	   <- ridge.fit$cvm[ridge.fit$lambda == ridge.fit$lambda.min]
+  
+  # Elastic regression
+  elast          <- glmnet(X, y, alpha=0.5)
+  elastic.fit    <- cv.glmnet(X, y, alpha=0.5)
+  elastic.coef   <- coef(elastic.fit, s = "lambda.min",exact = TRUE)
+  elastic.mse    <- elastic.fit$cvm[elastic.fit$lambda == elastic.fit$lambda.min]
 
-# Lasso regression
-lasso          <- glmnet(X, y, alpha=1)
-lasso.fit 	   <- cv.glmnet(X, y, alpha=1)
-lasso.coef     <- coef(lasso.fit, s = "lambda.min", exact = TRUE)
-lasso.mse 	   <- lasso.fit$cvm[lasso.fit$lambda == lasso.fit$lambda.min]
-
-# Ridge regression
-ridge          <- glmnet(X, y, alpha=0)
-ridge.fit 	   <- cv.glmnet(X, y, alpha=0)
-ridge.coef     <- coef(ridge.fit, s = "lambda.min",exact = TRUE)
-ridge.mse 	   <- ridge.fit$cvm[ridge.fit$lambda == ridge.fit$lambda.min]
-
-# Elastic regression
-elast          <- glmnet(X, y, alpha=0.5)
-elastic.fit    <- cv.glmnet(X, y, alpha=0.5)
-elastic.coef   <- coef(elastic.fit, s = "lambda.min",exact = TRUE)
-elastic.mse    <- elastic.fit$cvm[elastic.fit$lambda == elastic.fit$lambda.min]
-
-# 2.4. Prediction of 2014
+# Prediction of 2014
 
 LASpre <- predict(lasso.fit ,  pred.x,  s = "lambda.min")
 RIDpre <- predict(ridge.fit ,  pred.x,  s = "lambda.min")
@@ -304,52 +295,57 @@ ELApre <- predict(elastic.fit, pred.x,  s = "lambda.min")
 ### Benchmark model
 ###################################################################################################
 
+# Get total sales
 benchmark <- ts.wd$sum
 
+# Prepare data for fit - lagged data
 y <- benchmark[2:length(benchmark)]
 x <- benchmark[1:length(benchmark)-1]
 
-# Training and prediction data 
+# Define training and prediction data 
 x.training <- x[1:457]
 y.training <- y[1:457]
 x.pred     <- x[457:length(x)]
+
 # Fit model 
 m01 <- lm(y.training ~ x.training)
 
-# Prediction 
+# Prediction of 2014
 OLSpre <- m01$coefficients[1] + x.pred * m01$coefficients[2]
 
 ###################################################################################################
-### 5.Export predictions
+### Export predictions
 ###################################################################################################
 
+# Define sequence of days and create data frame for export
 n <- 1:length(LASpre)
 predictions <- data.frame(cbind(time=n,sales=pred.y,OLS=as.numeric(OLSpre),lasso=as.numeric(LASpre),ridge=as.numeric(RIDpre),elastic=as.numeric(ELApre)))
 
+# Export data to MySQL database
 dbSendQuery(data.base,"DROP TABLE IF EXISTS predictions")
 dbWriteTable(conn = data.base, name="predictions", value=predictions, row.names=FALSE)
 
 ###################################################################################################
-### 6. Check accurracy
+### Check accurracy
 ###################################################################################################
 
+# Create time series objects
 tLAS <-ts(LASpre,start=1,end=181,frequency = 1)
 tRID <-ts(RIDpre,start=1,end=181,frequency = 1)
 tELA <-ts(ELApre,start=1,end=181,frequency = 1)
 tOLS <-ts(OLSpre,start=1,end=181,frequency = 1)
 
+# Compute accuracy summary
 LASac <- accuracy(tLAS,pred.y)
 RIDac <- accuracy(tRID,pred.y)
 ELAac <- accuracy(tELA,pred.y)
 OLSac <- accuracy(tOLS,pred.y)
 
+# Define output dataframe with MAPEs of each model
 accur <- as.data.frame(cbind(LASac[5],RIDac[5],ELAac[5],OLSac[5]))
 colnames(accur) <- c("Lasso","Ridge","ElasticNet","OLS")
 
-###################################################################################################
-### 6. Export accurracy
-###################################################################################################
-
+# Export data to MySQL database
 dbSendQuery(data.base,"DROP TABLE IF EXISTS accuracy")
 dbWriteTable(conn = data.base, name="accuracy", value=accur, row.names=FALSE)
 

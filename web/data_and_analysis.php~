@@ -96,7 +96,7 @@
 <p>As an output example, we display the top recommendation for five different customers identified by their Client /ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
 
 <?php
-	// Most sold product pairs
+	// Recommendation
 	
 	$query = "SELECT ClientID, Brand AS TopBrand, Recommendations as Recommendation from cigar.recommendation";
 	$title = "Recommendation for top 5 clients";
@@ -129,7 +129,7 @@
 <p>Overall, this predictive tool can be used at by the higher echelons of the company's management team in order to gain visibility on future sales and operations.</p>
 
 <?php
-	// Most sold product pairs
+	// MAPE
 	
 	$query = "SELECT TRUNCATE(Lasso,2) AS Lasso, 
 			 TRUNCATE(Ridge,2) AS Ridge,
