@@ -18,8 +18,11 @@
 <?php
    // Total Revenue by product
     
-   $query = "SELECT dayname(I.InvoiceDate) as Day, TRUNCATE(SUM(i.Sales),2) as Total_sales FROM cigar.invoice_detail i INNER JOIN cigar.invoice I ON i.InvoiceNumber = I.InvoiceNumber GROUP BY dayname(I.InvoiceDate) ORDER BY FIELD(dayname(I.InvoiceDate), 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')";
-   $title = "Sales by day";
+   $query = "SELECT Dayname(Time) AS Days, TRUNCATE(AVG(Sales),2) AS Sales FROM
+(SELECT ft.InvoiceDate AS Time , SUM(st.Sales) AS Sales FROM cigar.invoice ft INNER JOIN cigar.invoice_detail st ON ft.InvoiceNumber=st.InvoiceNumber GROUP BY InvoiceDate) Subtable
+GROUP BY Days
+ORDER BY Day(Time)";
+   $title = "Average sales by weekdays (in USD)";
    query_and_print_graph($query,$title,"Dolars");
 ?>	
 
