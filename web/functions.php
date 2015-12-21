@@ -109,7 +109,7 @@ MY_MARKER;
           .call(chart);";
     $str = $str . <<<MY_MARKER
       nv.utils.windowResize(chart.update);
-
+      nv.utils.getColor('#16365c');
       return chart;
     });
 }    
@@ -241,7 +241,7 @@ function query_and_print_series2($query,$queryn, $title, $titlen,$label, $labeln
     ;
 
     chart.xAxis     //Chart x-axis settings
-      .axisLabel('Days (2014)')
+      .axisLabel('')
       .tickFormat(d3.format(',r'));
 
     chart.yAxis     //Chart y-axis settings
@@ -250,7 +250,7 @@ function query_and_print_series2($query,$queryn, $title, $titlen,$label, $labeln
 
 MY_MARKER;
 
-    $str = $str . PHP_EOL . 'chart.yAxis.axisLabel("x").axisLabelDistance(30)';
+    $str = $str . PHP_EOL . 'chart.yAxis.axisLabel("").axisLabelDistance(30)';
     $str = $str . PHP_EOL . "d3.select('#" . $id . " svg')
           .datum(" . $id . "Data())
           .call(chart);";
