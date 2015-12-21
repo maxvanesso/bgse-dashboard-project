@@ -31,8 +31,8 @@ ORDER BY Day(Time)";
 <?php
 	// Page body. Write here your queries
 	
-	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-	$title = "Best sellers";
+	$query = "SELECT p.Brand, TRUNCATE(sum(i.Volume),0) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
+	$title = "Best selling brands";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
