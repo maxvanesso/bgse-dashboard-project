@@ -305,7 +305,7 @@ x <- benchmark[1:length(benchmark)-1]
 # Define training and prediction data 
 x.training <- x[1:457]
 y.training <- y[1:457]
-x.pred     <- x[457:length(x)]
+x.pred     <- x[458:length(x)]
 
 # Fit model 
 m01 <- lm(y.training ~ x.training)
