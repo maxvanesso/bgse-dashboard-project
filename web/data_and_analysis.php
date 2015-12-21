@@ -32,7 +32,7 @@ ORDER BY Day(Time)";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, TRUNCATE(sum(i.Volume),0) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-	$title = "Best selling brands";
+	$title = "Best selling brands (by volume)";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
@@ -41,7 +41,7 @@ ORDER BY Day(Time)";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
-	$title = "Least sellers";
+	$title = "Least selling brands (by volume)";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 	
@@ -51,21 +51,21 @@ ORDER BY Day(Time)";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-	$title = "Most profitables";
+	$title = "Most revenue generating brands (in USD) ";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
-	<p>Here we display the cigar brands which generated the most profit over the time period we evaluated. We notice that only two of the top 5 brands are also in the most sold brands by volume, highlighting the differences between products which result in the highest profit margins and those which consumers are most drawn towards.</p>
+	<p>Here we display the cigar brands which generated the most revenue over the time period we evaluated. We notice that only two of the top 5 brands are also in the most sold brands by volume, highlighting the differences between products which result in the highest revnue and those which consumers are most drawn towards.</p>
 
 <?php
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
-	$title = "Least profitables";
+	$title = "Least revenue generating brands (in USD)";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
-	<p>Looking at the least profitable brands, there is a higher crossover with the least sold brands per volume. Once again, this gives us cues as to which brands could be cut entirely from the product portfolio, or re-branded entirely.</p>
+	<p>Looking at the brands that generated the least revenue, there is a higher crossover with the least sold brands per volume. Once again, this gives us cues as to which brands could be cut entirely from the product portfolio, or re-branded entirely.</p>
 
 	<p>Another important aspect of business intelligence is to map out where the customers are located. JR Cigars customers in North America appear to cluster on the East Coast, with a particularly large base in New York and Florida, as well as in California. Smaller clusters appear in Texas and in the Great Lakes Region.</p>
 		
@@ -73,17 +73,15 @@ ORDER BY Day(Time)";
 
 	<p>Such information could lead to targeted ad campaigns from the marketing department. Of additional interest could be a further analytical break down of the clusters of customers to better understand consumption drivers. Florida for example has a big customer base because of a large population of retirees, typically more fond of cigars than the rest of the population.</p>
 	
-<p>One of the most compact way of representing the 15 million entries in our dataset is through a time series. The following graph shows aggregate sales for the end of the year 2012, the whole of 2013, and the first half of 2014. The three "humps" represent a seasonal high that takes place during summer, reflecting customers' preferences for outdoors smoking. The highest peak is in december 2014, most likelue due to pre-Christmas purchases. In the Analysis section of our dashboard, we use this time series to build a predictive sales model via LASSO.</p>
+<p>One of the most compact way of representing the 15 million entries in our dataset is through a time series. The following graph shows aggregate sales for the end of the year 2012, the whole of 2013, and the first half of 2014. The three "humps" represent seasonal highs that take place during summer, reflecting customers' preferences for outdoors smoking. The highest peak is in december 2014, most likely due to pre-Christmas purchases. In the Analysis section of our dashboard, we use this time series to build a predictive sales model via several regression techniques.</p>
 
 <?php
 	// Page body. Write here your queries
 	
 	$query = "Select * from cigar.sales";
 	$title = "Aggregated sales per day (01/10/2012 - 30/06/14, in USD)";
-	query_and_print_series($query,$title,"Daily sales");
+	query_and_print_series($query,$title,"Aggregated daily sales");
 ?>
-	<p> In the next tab, we take this analysis further by implementing a product recommendation system and by looking at customers marginal contribution to revenues using a LASSO regression.</p>
-
 
 	</div>
 	<div id="analysis" style="display: none">
@@ -94,9 +92,9 @@ ORDER BY Day(Time)";
 
 	<div>	<center><img src="recomsystem.png" style="width: 80%"></img></center></div>
 	
-<p>We started by building ratings for each customer based on their purchase history and implied preferences. The more a customer bought a specific brand in comparison to the others, the higher the rating will be (with 10 being the highest score). In order to then predict what brands a specific customer (here in red) will like, we then used the ratings from customers with similar purchasing profiles - referred to as "nearest neighbours". The last step is to compute predicted ratings using the nearest neighbours' actual ratings. </p>
+<p>We started by building ratings for each customer based on their purchase history and implied preferences. The more a customer bought a specific brand in comparison to the others, the higher the rating will be (with 10 being the highest score). In order to then predict what brands a specific customer (here in red) will like, we used the ratings from customers with similar purchasing profiles - referred to as "nearest neighbours". The last step is to compute predicted ratings using the nearest neighbours' actual ratings. </p>
 
-<p>As an output example, we display the top recommendation for five different customers identified by their Client /ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
+<p>As an output example, we display the top recommendation for five different customers identified by their Client ID, as well as the top brand they bought. Overall, this tool can be extremely useful to the marketing department to produce personalized advertising recommendations, proven to be much more effective than mass campaigns.</p>
 
 <?php
 	// Recommendation
@@ -113,21 +111,21 @@ ORDER BY Day(Time)";
 
 	<div>	<center><img src="Tree.png" style="width: 80%"></img></center></div>	
 
-<p>In order to build a good sales prediction model, we fitted three different models using the following techniques: Ridge Regression, Elastic Net and LASSO. The latter displayed the best fit, and provided an ideal framework by allowing for some "shrinkage" effect on brands which carry relatively less explanatory power with the sales predictions.</p>
+<p>In order to build a good sales prediction model, we fitted three different models using the following techniques: Ridge Regression, Elastic Net and LASSO. The latter displayed the best fit, and provided an ideal framework by allowing for some "shrinkage" effect on brands which carry relatively less explanatory power with the sales predictions. As a baseline model we regressed total sales on the lagged total sales using OLS. The overall effect improves prediction accuracy significantly.</p>
 
-<p>We used data from 2012 and 2013 to train our model and carried out predictions for the first half of the year 2014 to check for accuracy. The following plot shows the obtained results, with the actual observed sales appearing in blue and our predictions in grey.</p>
+<p>We used data from 2012 and 2013 to train our model and carried out predictions for the first half of the year 2014. The following plot shows the obtained results, with the actual observed sales appearing in blue and our predictions in grey.</p>
 
 <?php
 	// Page body. Write here your queries
 	
-	$query = "Select time , sales from cigar.predictions";
+	$query =  "Select time , sales from cigar.predictions";
 	$queryn = "Select time,lasso from cigar.predictions";	
-	$title = "Prediction of sales (01/01/2014 - 30/06/2014, in USD)";
+	$title =  "Prediction of sales (01/01/2014 - 30/06/2014, in USD)";
 	$titlen = "";
 	query_and_print_series2($query,$queryn,$title,$titlen,"Observed Sales","Predicted sales (Technique: Lasso-regression)");
 ?>
 
-<p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 12.6%, compared to 25% for the Ordinary Least Square baseline model.</p>
+<p>Graphically, the fit looks quite satisfactory. We computed the Mean Absolute Percentage Error to confirm and obtained a result of 11.99%, compared to 18.16% for the Ordinary Least Square baseline model.</p>
 
 <p>Overall, this predictive tool can be used at by the higher echelons of the company's management team in order to gain visibility on future sales and operations.</p>
 

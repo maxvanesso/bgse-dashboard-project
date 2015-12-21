@@ -32,7 +32,7 @@ ORDER BY Day(Time)";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, TRUNCATE(sum(i.Volume),0) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-	$title = "Best selling brands";
+	$title = "Best selling brands (by volume)";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 
@@ -41,7 +41,7 @@ ORDER BY Day(Time)";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, sum(i.Volume) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
-	$title = "Least sellers";
+	$title = "Least selling brands (by volume)";
 	query_and_print_graph($query,$title,"Number of cigars");
 ?>
 	
@@ -51,17 +51,17 @@ ORDER BY Day(Time)";
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total	from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total desc limit 5";
-	$title = "Most profitables";
+	$title = "Most revenue generating brands (in USD) ";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 
-	<p>Here we display the cigar brands which generated the most profit over the time period we evaluated. We notice that only two of the top 5 brands are also in the most sold brands by volume, highlighting the differences between products which result in the highest profit margins and those which consumers are most drawn towards.</p>
+	<p>Here we display the cigar brands which generated the most revenue over the time period we evaluated. We notice that only two of the top 5 brands are also in the most sold brands by volume, highlighting the differences between products which result in the highest revnue and those which consumers are most drawn towards.</p>
 
 <?php
 	// Page body. Write here your queries
 	
 	$query = "SELECT p.Brand, truncate(sum(i.Sales),2) as Total from cigar.product p inner join cigar.invoice_detail i on p.BrandID=i.BrandID group by Brand order by Total asc limit 5";
-	$title = "Least profitables";
+	$title = "Least revenue generating brands (in USD)";
 	query_and_print_graph($query,$title,"Dollars");
 ?>
 

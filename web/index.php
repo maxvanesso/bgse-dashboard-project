@@ -72,7 +72,7 @@ function show_content(optionsId) {
   				<li> Product information : product brand, manufacturer, product category</li>
 			</ul>
 			
-			<p>The original dataset spans about a million rows for a total of 15 million entries. The challenge for us was to leverage this dataset into useful business intelligence, that could for example be leveraged by the company's managers to increase profitability.</p>
+			<p>The original dataset spans about a million rows for a total of 15 million entries. The challenge for us was to leverage this dataset into useful business intelligence, that could for example be used by the company's managers to increase profitability.</p>
 
 			<h3>The Solution</h3>
 						
