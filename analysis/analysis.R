@@ -297,7 +297,9 @@ pred.x <- brand.X[458:nrow(brand.X),]
 pred.y <- brand.y[458:length(brand.y)]
 
 # Fit models
-
+  
+  # Set seed to get reproducable results
+  set.seed(1)
   # Lasso regression
   lasso.fit 	   <- cv.glmnet(X, y, alpha=1)
   # Ridge regression
