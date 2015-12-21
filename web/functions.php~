@@ -109,6 +109,7 @@ MY_MARKER;
           .call(chart);";
     $str = $str . <<<MY_MARKER
       nv.utils.windowResize(chart.update);
+
       return chart;
     });
 }    
@@ -240,7 +241,7 @@ function query_and_print_series2($query,$queryn, $title, $titlen,$label, $labeln
     ;
 
     chart.xAxis     //Chart x-axis settings
-      .axisLabel('')
+      .axisLabel('Days (2014)')
       .tickFormat(d3.format(',r'));
 
     chart.yAxis     //Chart y-axis settings

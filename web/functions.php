@@ -162,7 +162,7 @@ function query_and_print_series($query,$title,$label) {
     ;
 
     chart.xAxis     //Chart x-axis settings
-      .axisLabel('X')
+      .axisLabel('')
       .tickFormat(d3.format(',r'));
 
     chart.yAxis     //Chart y-axis settings
@@ -241,7 +241,7 @@ function query_and_print_series2($query,$queryn, $title, $titlen,$label, $labeln
     ;
 
     chart.xAxis     //Chart x-axis settings
-      .axisLabel('Days (2014)')
+      .axisLabel('')
       .tickFormat(d3.format(',r'));
 
     chart.yAxis     //Chart y-axis settings
