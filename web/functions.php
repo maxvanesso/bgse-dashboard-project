@@ -109,7 +109,6 @@ MY_MARKER;
           .call(chart);";
     $str = $str . <<<MY_MARKER
       nv.utils.windowResize(chart.update);
-      nv.utils.getColor(#16365c);
       return chart;
     });
 }    
