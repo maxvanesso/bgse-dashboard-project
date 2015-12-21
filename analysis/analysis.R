@@ -17,9 +17,10 @@
 ### 0.1 Load packages
 library("RMySQL")
 library("forecast")
-library("lars")
 library("recommenderlab")
 library("glmnet")
+library("ggmap")
+library("ggplot2")
 
 ### 0.2 Initíalize functions
 
@@ -45,7 +46,16 @@ library("glmnet")
 
   }
 
-### 0.3 Connect to database / Get summary
+### 0.3 Styling options
+co <- 1/255 
+pers.green      <- rgb( co *  14 ,  co * 105 , co *  90 )
+pers.blue       <- rgb( co *  22 ,  co *  54 , co *  92 )
+pers.red        <- rgb( co *  99 ,  co *  37 , co *  35 )
+pers.gray       <- rgb( co * 150 ,  co * 150 , co * 150 )
+pers.oragange   <- rgb( co * 186 ,  co *  85 , co *  59 )
+pers.beige      <- rgb( co * 196 ,  co * 189 , co * 151 )
+  
+### 0.4 Connect to database / Get summary
 
 data.base   <- dbConnect( MySQL() , user='root' , password='root' ,dbname='cigar' , host='localhost' )
 tab.names   <- dbListTables( data.base )
@@ -76,6 +86,29 @@ o   <- data.frame(cbind(n,res))
 # Export results to database
 dbSendQuery(data.base,"DROP TABLE IF EXISTS sales")
 dbWriteTable(conn = data.base, name="sales", value=o, row.names=FALSE)
+
+###################################################################################################
+### Map
+###################################################################################################
+
+# Get and adjust client data
+que1 <- "SELECT State, COUNT(*) 
+         FROM client
+         GROUP BY State"
+n1   <- -1
+states.freq <- query(data.base,que1,n1)
+colnames(states.freq)[1] <- "state"
+colnames(states.freq)[2] <- "Frequency of States"
+
+#Get map data
+state_latlon <- read.csv("data/state_latlon v2.csv", header = TRUE)
+map_matrix1  <- merge(states.freq, state_latlon, by="state")
+map 		     <- invisible(get_map(location = "united states", zoom = 3, maptype = "toner-lite", source = 'google')) 
+
+#get a map of USA from google source
+map.final    <- ggmap(map) +
+  geom_point(aes(x = longitude, y = latitude, size = map_matrix1$`Frequency of States`),
+             data = map_matrix1, colour=pers.blue, alpha=0.7, highres = TRUE) + theme_nothing()
 
 ###################################################################################################
 ### Recommandation system
@@ -178,8 +211,6 @@ names(sales.by.brand) <- sapply( 1:max , function(i){ paste0( "Brand" , i ) } )
 
 n      <- -1
 max    <- query(data.base,"SELECT DISTINCT(InvoiceDate) FROM invoice",n)
-
-
 ts.wd                 <- max
 colnames(ts.wd)[1]    <- "InvoiceDate"
 
@@ -268,22 +299,11 @@ pred.y <- brand.y[458:length(brand.y)]
 # Fit models
 
   # Lasso regression
-  lasso          <- glmnet(X, y, alpha=1)
   lasso.fit 	   <- cv.glmnet(X, y, alpha=1)
-  lasso.coef     <- coef(lasso.fit, s = "lambda.min", exact = TRUE)
-  lasso.mse 	   <- lasso.fit$cvm[lasso.fit$lambda == lasso.fit$lambda.min]
-  
   # Ridge regression
-  ridge          <- glmnet(X, y, alpha=0)
   ridge.fit 	   <- cv.glmnet(X, y, alpha=0)
-  ridge.coef     <- coef(ridge.fit, s = "lambda.min",exact = TRUE)
-  ridge.mse 	   <- ridge.fit$cvm[ridge.fit$lambda == ridge.fit$lambda.min]
-  
   # Elastic regression
-  elast          <- glmnet(X, y, alpha=0.5)
   elastic.fit    <- cv.glmnet(X, y, alpha=0.5)
-  elastic.coef   <- coef(elastic.fit, s = "lambda.min",exact = TRUE)
-  elastic.mse    <- elastic.fit$cvm[elastic.fit$lambda == elastic.fit$lambda.min]
 
 # Prediction of 2014
 
@@ -330,10 +350,10 @@ dbWriteTable(conn = data.base, name="predictions", value=predictions, row.names=
 ###################################################################################################
 
 # Create time series objects
-tLAS <-ts(LASpre,start=1,end=181,frequency = 1)
-tRID <-ts(RIDpre,start=1,end=181,frequency = 1)
-tELA <-ts(ELApre,start=1,end=181,frequency = 1)
-tOLS <-ts(OLSpre,start=1,end=181,frequency = 1)
+tLAS <-ts(LASpre,start=1,end=180,frequency = 1)
+tRID <-ts(RIDpre,start=1,end=180,frequency = 1)
+tELA <-ts(ELApre,start=1,end=180,frequency = 1)
+tOLS <-ts(OLSpre,start=1,end=180,frequency = 1)
 
 # Compute accuracy summary
 LASac <- accuracy(tLAS,pred.y)
